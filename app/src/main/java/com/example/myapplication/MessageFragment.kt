@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentMessageBinding
 import com.example.myapplication.model.Message
@@ -49,6 +50,9 @@ class MessageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.messageBack.setOnClickListener{
+            requireActivity().findViewById<ViewPager2>(R.id.homeViewPager).currentItem = 1
+        }
         binding.messageButton.setOnClickListener {
             val newMessageFragment = NewMessageFragment()
             val fragmentTransaction = parentFragmentManager.beginTransaction()

@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.R
-import com.example.myapplication.model.Comment
 import com.example.myapplication.model.PostModel
 import com.example.myapplication.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +20,6 @@ import kotlinx.coroutines.launch
 // Kotlin Flow nedir
 
 class HomeViewModel : ViewModel() {
-
-    val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
-
 
     private var database: DatabaseReference = Firebase.database.reference
     private val _postsData: MutableLiveData<ArrayList<PostModel>> = MutableLiveData()
@@ -44,10 +39,6 @@ class HomeViewModel : ViewModel() {
         database.child("Posts")
             .orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-
-                    val commentList: ArrayList<Comment> = ArrayList()
-                    val commentCount = commentList.size
-
                     for (i in snapshot.children) {
                         if (snapshot.exists()) {
                             val post: PostModel? = i.getValue<PostModel>()
@@ -57,9 +48,8 @@ class HomeViewModel : ViewModel() {
                         }
                     }
 
-                    //postList.reverse()
+                    postList.reverse()
                     _postsData.postValue(postList)
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {

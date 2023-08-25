@@ -90,7 +90,7 @@ class MessageItemAdapter(
             .child(senderUid!!)
             .child(receiverUid)
             .child("messages")
-            .orderByChild("timeStamp")
+            .orderByKey()
             .limitToLast(1)
         Log.d("adaad", "$chatRef")
         chatRef.addListenerForSingleValueEvent(object : ValueEventListener {

@@ -17,6 +17,7 @@ import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.model.UserModel
 import com.example.myapplication.ui.adapter.ItemListAdapter
 import com.example.myapplication.ui.adapter.StoryAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
