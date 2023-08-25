@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "110024933227",
+    "firebase_url": "https://canberk-odev.firebaseio.com",
+    "project_id": "canberk-odev",
+    "storage_bucket": "canberk-odev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110024933227:android:83b1fc7b1854ae8ce1d62e",
+        "android_client_info": {
+          "package_name": "com.adilcan.Odev2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110024933227-3k37q71u0gu7aejm4m2trnnoah7v5edh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adilcan.Odev2",
+            "certificate_hash": "b6931f5d29fdd9d9738af3dad976335f351cc613"
+          }
+        },
+        {
+          "client_id": "110024933227-sol390hhmgfp6i91256ubfgnas3jj0ce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ16sNmlgko3Ef1Gh_5A6-ZDA5TaJ2Ugw"
+        },
+        {
+          "current_key": "AIzaSyAO_8vZTs5BTgrGYv-A-0I9tMgiSM63rLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110024933227-sol390hhmgfp6i91256ubfgnas3jj0ce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110024933227-jo0krq5b0f5qnhqfpltc2ir8r5erh7g2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.adilcan.Odev2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110024933227:android:04e5e303d17ee312e1d62e",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110024933227-sol390hhmgfp6i91256ubfgnas3jj0ce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ16sNmlgko3Ef1Gh_5A6-ZDA5TaJ2Ugw"
+        },
+        {
+          "current_key": "AIzaSyAO_8vZTs5BTgrGYv-A-0I9tMgiSM63rLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110024933227-sol390hhmgfp6i91256ubfgnas3jj0ce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110024933227-jo0krq5b0f5qnhqfpltc2ir8r5erh7g2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.adilcan.Odev2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

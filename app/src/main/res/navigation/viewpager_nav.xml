@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewpager_nav"
+    app:startDestination="@id/userProfilePostFragment2">
+    <fragment
+        android:id="@+id/userProfilePostFragment2"
+        android:name="com.example.myapplication.ui.users.UserProfilePostFragment"
+        android:label="fragment_user_post"
+        tools:layout="@layout/fragment_user_post">
+        <action
+            android:id="@+id/action_userProfilePostFragment2_to_userProfileReelsFragment2"
+            app:destination="@id/userProfileReelsFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileReelsFragment2"
+        android:name="com.example.myapplication.ui.users.UserProfileReelsFragment"
+        android:label="fragment_user_profile_reels"
+        tools:layout="@layout/fragment_user_profile_reels">
+        <action
+            android:id="@+id/action_userProfileReelsFragment2_to_userProfileTaggetPostFragment22"
+            app:destination="@id/userProfileTaggetPostFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileTaggetPostFragment2"
+        android:name="com.example.myapplication.ui.users.UserProfileTaggetPostFragment"
+        android:label="fragment_user_profile_tagget_post"
+        tools:layout="@layout/fragment_user_profile_tagget_post" />
+</navigation>
