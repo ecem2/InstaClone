@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ class AddPostNextFragment : Fragment() {
     private val selectedImage : ArrayList<String> = ArrayList()
     private lateinit var photoInfo: String
     private lateinit var timestamp: String
+    private var imageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +39,12 @@ class AddPostNextFragment : Fragment() {
         binding = FragmentAddPostNextBinding.inflate(inflater, container, false)
         val view = binding.root
         firebaseAuth = FirebaseAuth.getInstance()
+        val imageUri = arguments?.getParcelable<Uri>("imageUri")
+        if (imageUri != null) {
+            // Load and display the image using the imageUri
+            Glide.with(requireContext()).load(imageUri).into(binding.ivPostImage)
 
+        }
         getSelectedUserData()
 
         return view

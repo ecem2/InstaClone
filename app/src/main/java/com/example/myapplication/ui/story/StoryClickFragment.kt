@@ -70,7 +70,7 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
         storiesProgressView = binding.storiesProgressView
         database = FirebaseDatabase.getInstance().reference
 
-        // setupStoryView(storyList) //todo story list bos geliyor
+        // setupStoryView(storyList)
         getSelectedUserData()
         clickListeners()
         database.child("Users").orderByChild("userStory")

@@ -35,7 +35,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center|start"
             android:textColor="@color/black"
-            android:textStyle="bold"
+            android:fontFamily="@font/helvetica_condensed_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/profilePhoto"
             app:layout_constraintStart_toEndOf="@+id/profilePhoto"
@@ -48,7 +48,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
             android:src="@drawable/ic_first"
             app:layout_constraintBottom_toTopOf="@+id/guideline_top"
             app:layout_constraintDimensionRatio="1:1"
@@ -146,12 +145,40 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/guideline_bottom">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userNicknameExplanation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/helvetica_condensed_bold"
+                android:text="ecemcig" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/userNicknameComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/helvetica_condensed_bold"
+                    tools:text="comment" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/likeCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
+                android:layout_marginTop="8dp"
+
+                android:fontFamily="@font/helvetica_condensed_bold"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 tools:text="likes" />
@@ -163,6 +190,7 @@
                 android:layout_marginTop="8dp"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
+                android:fontFamily="@font/helvetica_condensed_bold"
                 android:textStyle="bold"
                 tools:text="comments" />
 
@@ -175,6 +203,7 @@
                 android:textColor="@color/gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
+                android:fontFamily="@font/helvetica_medium_condensed"
                 tools:text="8 Haziran 2023" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

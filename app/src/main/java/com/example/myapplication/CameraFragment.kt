@@ -17,6 +17,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentCameraBinding
 import com.example.myapplication.extension.setupActionBar
@@ -54,6 +55,7 @@ class CameraFragment : Fragment() {
     ): View? {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val view = binding.root
+
 
 //        setupActionBar(requireActivity())
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -205,8 +207,25 @@ class CameraFragment : Fragment() {
                         Glide.with(requireContext()).load(output.savedUri).into(imagePreview)
                     }
 
+                    binding.cameraNext.setOnClickListener {
+                        val bundle = Bundle().apply {
+                            putParcelable("imageUri", output.savedUri)
+                        }
 
-                    Log.d(TAG, msg)
+                        val addPostNextFragment = AddPostNextFragment()
+                        addPostNextFragment.arguments = bundle
+                    }
+
+//                        // FragmentTransaction ile geçişi yönet
+//                        val fragmentManager = parentFragmentManager
+//                        val transaction = fragmentManager.beginTransaction()
+//                        transaction.replace(R.id.fragment_container, addPostNextFragment)
+//                        transaction.addToBackStack(null)
+//                        transaction.commit()
+//                        Log.d("transactionaaa", "$transaction")
+//                        Log.d(TAG, msg)
+
+
                 }
             }
         )

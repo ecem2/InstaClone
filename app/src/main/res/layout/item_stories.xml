@@ -31,7 +31,9 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-         app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/black"
+            android:fontFamily="@font/helvetica_medium_condensed"
+           app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/storyView"
             android:text="ecemcig" />
