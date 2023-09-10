@@ -70,7 +70,7 @@ class MessageItemAdapter(
         //getConversationParticipants(holder)
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
-            bundle.putParcelable("clickedUserId", user)
+            bundle.putParcelable("clickedUserIdModel", user)
             it.findNavController().navigate(R.id.chatFragment, bundle)
         }
     }

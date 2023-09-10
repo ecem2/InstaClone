@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -16,11 +17,13 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentMessageBinding
 import com.example.myapplication.model.Message
 import com.example.myapplication.model.UserModel
+import com.example.myapplication.service.MyFirebaseMessagingService
 import com.example.myapplication.ui.adapter.MessageAdapter
 import com.example.myapplication.ui.adapter.MessageItemAdapter
 import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MessageFragment : Fragment() {
 
@@ -43,16 +46,17 @@ class MessageFragment : Fragment() {
         _binding = FragmentMessageBinding.inflate(inflater, container, false)
         databaseReference = FirebaseDatabase.getInstance().reference
         senderUid = FirebaseAuth.getInstance().currentUser?.uid
-
+        MyFirebaseMessagingService.sharedPref = activity?.getSharedPreferences("sharedPref", Context.MODE_PRIVATE)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            MyFirebaseMessagingService.token = it
+        }
         val view = binding.root
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.messageBack.setOnClickListener{
-            requireActivity().findViewById<ViewPager2>(R.id.homeViewPager).currentItem = 1
-        }
+
         binding.messageButton.setOnClickListener {
             val newMessageFragment = NewMessageFragment()
             val fragmentTransaction = parentFragmentManager.beginTransaction()
