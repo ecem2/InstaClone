@@ -7,16 +7,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.databinding.ItemStoriesBinding
 import com.example.myapplication.model.UserModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class StoryAdapter(
     val context: Context,
     val storyList: ArrayList<UserModel>,
-    private val onClickListener: StoryAdapter.OnClickListener
+    private val onClickListener: StoryAdapter.OnClickListener,
 ) : ListAdapter<UserModel, StoryAdapter.StoryViewHolder>(StoryDiffUtil) {
-
+    val user = Firebase.auth.currentUser!!.uid
+    private lateinit var database: DatabaseReference
     companion object StoryDiffUtil : DiffUtil.ItemCallback<UserModel>() {
         override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
             return oldItem == newItem
@@ -35,7 +44,9 @@ class StoryAdapter(
                 false
             )
         )
+
     }
+
 
     override fun getItemCount(): Int {
         return storyList.size
@@ -47,10 +58,11 @@ class StoryAdapter(
         holder.itemView.setOnClickListener {
             onClickListener.onClick(storyItem)
         }
+
         holder.bind(storyItem)
 
 
-    /*   var postItem = storyList[position]
+        /*   var postItem = storyList[position]
 
        holder.bind(postItem)*/
 

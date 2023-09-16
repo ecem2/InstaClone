@@ -15,6 +15,7 @@ import com.example.myapplication.extension.parcelable
 import com.example.myapplication.model.Story
 import com.example.myapplication.model.UserModel
 import com.example.myapplication.ui.adapter.StoryClickAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import jp.shts.android.storiesprogressview.StoriesProgressView
 
@@ -22,20 +23,21 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
 
     private var counter = 0
     private lateinit var database: DatabaseReference
-    var storyData: ArrayList<String> = ArrayList()
-    private lateinit var storyClickAdapter: StoryClickAdapter
-
     private var storiesProgressView: StoriesProgressView? = null
+    private lateinit var firebaseAuth: FirebaseAuth
+
     private lateinit var binding: FragmentStoryClickBinding
     private var pressTime = 0L
     private var limit = 2000L
     var currentIndex = 0
     val userHasStory: ArrayList<Story> = ArrayList()
     private val storyList: ArrayList<String> = ArrayList()
-
     private var storyIndex = 0
     private var clickedUserId: String? = null
     private var userIndex = 0
+    var userId: String? = null
+    var storyData: ArrayList<String> = ArrayList()
+
     private val onTouchListener: View.OnTouchListener = object : View.OnTouchListener {
         override fun onTouch(view: View?, motionEvent: MotionEvent): Boolean {
             when (motionEvent.action) {
@@ -64,36 +66,36 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
         val view = binding.root
 
 
+        firebaseAuth = FirebaseAuth.getInstance()
+        userId = FirebaseAuth.getInstance().currentUser?.uid
         binding.storyExit.setOnClickListener {
             findNavController().popBackStack()
         }
         storiesProgressView = binding.storiesProgressView
-        database = FirebaseDatabase.getInstance().reference
 
-        // setupStoryView(storyList)
+        database = FirebaseDatabase.getInstance().reference
+        fetchUserStoriesFromFirebase()
         getSelectedUserData()
         clickListeners()
-        database.child("Users").orderByChild("userStory")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val storyData = snapshot.getValue(UserModel::class.java)
-                        for (i in snapshot.children) {
-                            currentIndex++
-                            userHasStory.add(
-                                Story(
-                                    index = currentIndex,
-                                    user = storyData!!
-                                )
-                            )
-                        }
-                    }
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
+//        database.child("Users").child(clickedUserId!!).child("userStory")
+//            .addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    if (snapshot.exists()) {
+//                        for (childSnapshot in snapshot.children) {
+//                            val storyUrl = childSnapshot.getValue(String::class.java)
+//                            if (storyUrl != null) {
+//                                storyList.add(storyUrl)
+//                            }
+//                        }
+//                        // Verileri aldıktan sonra setupStoryView'ı çağırın
+//                        setupStoryView(storyList)
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    // Hata durumunda yapılacak işlemler burada
+//                }
+//            })
 
         return view
     }
@@ -111,17 +113,58 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
                 Glide.with(requireContext())
                     .load(translation.userStory?.get(0))
                     .into(binding.storyPhoto)
-
+                binding.storiesProgressView.visibility = View.VISIBLE
                 Log.d("salimmm", "translationtranslation ${translation}")
             }
         }
     }
+    private fun fetchUserStoriesFromFirebase() {
+        database.child("Users").child(userId!!).child("userStory")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val storyData = snapshot.getValue(UserModel::class.java)
+                        for (childSnapshot in snapshot.children) {
+                            val storyUrl = childSnapshot.getValue(String::class.java)
+                            if (storyUrl != null) {
+                                storyList.add(storyUrl)
+                                Log.d("storyList", "$storyList")
+                                currentIndex++
+                                userHasStory.add(
+                                    Story(
+                                        index = currentIndex,
+                                        user = storyData!!
+                                    )
+                                )
+                            }
+                        }
+
+                        // Verileri aldıktan sonra setupStoryView'ı çağırın
+                       setupStoryView(storyList)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Hata durumunda yapılacak işlemler burada
+                }
+            })
+    }
 
     private fun setupStoryView(storyList: ArrayList<String>) {
-        storiesProgressView?.setStoriesCount(storyList.size); // <- set stories
-        storiesProgressView?.setStoryDuration(3000L); // <- set a story duration
-        storiesProgressView?.setStoriesListener(this); // <- set listener
-        storiesProgressView?.startStories()
+        storiesProgressView = binding.storiesProgressView
+        Log.d("StoryClickFragment", "storiesProgressView: $storiesProgressView")
+
+        storiesProgressView?.setStoriesCount(storyList.size)
+        Log.d("StoryClickFragment", "setStoriesCount called")
+
+        storiesProgressView?.setStoryDuration(3000L)
+        Log.d("StoryClickFragment", "setStoryDuration called")
+
+        storiesProgressView?.setStoriesListener(this)
+        Log.d("StoryClickFragment", "setStoriesListener called")
+
+      //  storiesProgressView?.startStories()
+        Log.d("StoryClickFragment", "startStories called")
     }
 
     private fun clickListeners() {
@@ -134,6 +177,7 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
 
         binding.skip.setOnClickListener {
             binding.storiesProgressView.skip()
+            counter++
             Log.d("Ecemmm", "SKIP CLICKED")
 
         }
@@ -154,11 +198,13 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
     }
 
     override fun onNext() {
-        for (i in userHasStory) {
-            if (i.index == storyIndex) {
-                Glide.with(requireContext()).load(i.user?.userStory?.get(++counter))
-                    .into(binding.storyPhoto)
-            }
+        if (counter < userHasStory.size - 1) {
+            counter++
+            Glide.with(requireContext()).load(userHasStory[counter].user?.userStory?.get(storyIndex))
+                .into(binding.storyPhoto)
+        } else {
+            // Tüm hikayeleri tamamladıysanız bir sonraki sayfaya gitmek için
+            onStoryCompleted()
         }
     }
 

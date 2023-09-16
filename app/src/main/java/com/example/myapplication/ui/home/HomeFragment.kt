@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
     val viewModel: HomeViewModel by viewModels()
     var storyData: ArrayList<UserModel>? = ArrayList()
     val user = Firebase.auth.currentUser!!.uid
+    val currentUserStory = UserModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +53,7 @@ class HomeFragment : Fragment() {
         postReference = database.child("Posts")
         setupRecyclerView()
         setupRecyclerStoryView()
+
         return view
     }
 
@@ -105,7 +107,6 @@ class HomeFragment : Fragment() {
                 bundle.putParcelable("clickedUserId", storyItem)
                 findNavController().navigate(R.id.storyClickFragment, bundle)
 
-
             })
 
         binding.storiesRecyclerView.apply {
@@ -115,6 +116,7 @@ class HomeFragment : Fragment() {
             setHasFixedSize(true)
         }
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -126,6 +128,7 @@ class HomeFragment : Fragment() {
         getStoryData()
 
     }
+
 
     private fun getPostData() {
         viewModel.postsData.observe(viewLifecycleOwner) { postArrayList ->

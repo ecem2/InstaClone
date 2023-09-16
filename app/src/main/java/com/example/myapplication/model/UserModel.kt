@@ -11,11 +11,11 @@ data class UserModel(
     @SerializedName(value = "userName")
     val userName: String? = null,
     @SerializedName(value = "userNickName")
-    val userNickName: String? = null,
+    var userNickName: String? = null,
     @SerializedName("userSurname")
     val userSurname: String? = null,
     @SerializedName(value = "profilePhoto")
-    val profilePhoto: String? = null,
+    var profilePhoto: String? = null,
     @SerializedName("followingArray")
     val followingArray: ArrayList<String>? = null,
     @SerializedName("followersArray")

@@ -22,25 +22,21 @@ import com.example.myapplication.model.Message
 import com.example.myapplication.model.NotificationData
 import com.example.myapplication.model.PushNotification
 import com.example.myapplication.model.UserModel
-import com.example.myapplication.service.MyFirebaseMessagingService
 import com.example.myapplication.service.MyFirebaseMessagingService.Companion.token
 import com.example.myapplication.ui.adapter.MessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.ktx.messaging
-import com.google.firebase.messaging.ktx.remoteMessage
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONObject
 
 import java.util.*
 import kotlin.collections.ArrayList
 
-const val TOPIC = "/topics/myTopic"
+//const val TOPIC = "/topics/myTopic"
 class ChatFragment : Fragment() {
 
     private var _binding: FragmentChatBinding? = null
@@ -55,7 +51,9 @@ class ChatFragment : Fragment() {
     var dialog: ProgressDialog? = null
     var senderUid: String? = null
     var receiverUid: String? = null
-   // private lateinit var receiverFCMToken: String
+    var receiverFCMToken: String = ""
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,82 +63,17 @@ class ChatFragment : Fragment() {
         databaseReference = FirebaseDatabase.getInstance().reference
         firebaseAuth = FirebaseAuth.getInstance()
         senderUid = FirebaseAuth.getInstance().currentUser?.uid
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
-        setupFirebaseMessaging()
+        //FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+
 //
 //        dialog = ProgressDialog(requireContext())
 //        dialog!!.setMessage("Uploading image...")
 //        dialog!!.setCancelable(false)
-
-        binding.gallery.setOnClickListener {
-            val intent = Intent()
-            intent.action = Intent.ACTION_GET_CONTENT
-            intent.type = "image/*"
-            startActivityForResult(intent, 25)
-        }
-
-        binding.sendMessage.setOnClickListener {
-            val messageText: String = binding.messageBox.text.toString()
-            val sendName: String = binding.chatNickname.text.toString()
-            val date = Date()
-            val message = Message(
-                message = messageText,
-                senderId = senderUid,
-                receiverId = receiverUid,
-                timeStamp = date.time
-            )
-            val receiverMessage = Message(
-                message = messageText,
-                senderId = senderUid,
-                receiverId = receiverUid,
-                timeStamp = date.time
-            )
-            if(sendName.isNotEmpty() && messageText.isNotEmpty()){
-                PushNotification(
-                    NotificationData(sendName, messageText),
-                    TOPIC
-                ).also {
-                    sendNotification(it)
-                }
-            }
-
-            binding.messageBox.setText("")
-
-
-            val messageId = UUID.randomUUID().toString().substring(0,15)
-                //databaseReference.child("Chats").child(senderUid!!)
-               // .child(receiverUid!!).child("messages").push().key
-            Log.e("FirebaseErrorrr", "Message sender uid: ${senderUid}")
-            Log.e("FirebaseErrorrr", "Message receiver uid: ${receiverUid}")
-
-            databaseReference.child("Chats").child(senderUid!!).child(receiverUid!!)
-                .child("messages").child(messageId!!)
-                .setValue(message).addOnSuccessListener {
-
-                    // Mesaj başarıyla gönderildi
-                }.addOnFailureListener { e ->
-                    Log.e("FirebaseError", "Message sending failed: ${e.message}")
-                }
-            val receiverMessageId = databaseReference.child("Chats").child(receiverUid!!)
-                .child(senderUid!!).child("messages").push().key
-            databaseReference.child("Chats").child(receiverUid!!).child(senderUid!!)
-                .child("messages").child(receiverMessageId!!)
-                .setValue(receiverMessage).addOnSuccessListener {
-                    // Mesaj başarıyla gönderildi
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        getMessage()
-                    }, 100)
-                }.addOnFailureListener { e ->
-                    Log.e("FirebaseError", "Message sending failed: ${e.message}")
-                }
-
-            // sendMessage(messageText, receiverUid!!)  // Mesaj gönderme işlemini çağırın
-            hideKeyboard()
-        }
-        getUserMessage()
-
         return view
+
     }
+
+
 
     fun getUserMessage() {
         val handler = Handler()
@@ -188,13 +121,96 @@ class ChatFragment : Fragment() {
         setupRecyclerChatView()
         getMessage()
 
+        lifecycleScope.launchWhenStarted {
+            try {
+                fetchReceiverToken()
+            } catch (e: Exception) {
+                Log.d("fatoss","receiverFCMToken EXCEPTION ${e.localizedMessage}")
+            }
+        }
 
+        binding.gallery.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_GET_CONTENT
+            intent.type = "image/*"
+            startActivityForResult(intent, 25)
+        }
+
+        binding.sendMessage.setOnClickListener {
+            try {
+                val messageText: String = binding.messageBox.text.toString()
+                val sendName: String = binding.chatNickname.text.toString()
+                val date = Date()
+                val message = Message(
+                    message = messageText,
+                    senderId = senderUid,
+                    receiverId = receiverUid,
+                    timeStamp = date.time
+                )
+                val receiverMessage = Message(
+                    message = messageText,
+                    senderId = senderUid,
+                    receiverId = receiverUid,
+                    timeStamp = date.time
+                )
+
+
+
+                Log.d("FATOSSS", "receiverToken = $receiverFCMToken")
+                if (sendName.isNotEmpty() && messageText.isNotEmpty()) {
+
+//                    sendNotification(
+//                        PushNotification(
+//                            NotificationData(sendName, messageText),
+//                            receiverFCMToken
+//                        )
+//                    )
+
+                    setupFirebaseMessaging()
+                }
+
+                binding.messageBox.setText("")
+
+
+                val messageId = UUID.randomUUID().toString().substring(0, 15)
+                Log.e("FirebaseErrorrr", "Message sender uid: ${senderUid}")
+                Log.e("FirebaseErrorrr", "Message receiver uid: ${receiverUid}")
+
+                databaseReference.child("Chats").child(senderUid!!).child(receiverUid!!)
+                    .child("messages").child(messageId!!)
+                    .setValue(message).addOnSuccessListener {
+
+                        // Mesaj başarıyla gönderildi
+                    }.addOnFailureListener { e ->
+                        Log.e("FirebaseError", "Message sending failed: ${e.message}")
+                    }
+                val receiverMessageId = databaseReference.child("Chats").child(receiverUid!!)
+                    .child(senderUid!!).child("messages").push().key
+                databaseReference.child("Chats").child(receiverUid!!).child(senderUid!!)
+                    .child("messages").child(receiverMessageId!!)
+                    .setValue(receiverMessage).addOnSuccessListener {
+                        // Mesaj başarıyla gönderildi
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            getMessage()
+                        }, 100)
+                    }.addOnFailureListener { e ->
+                        Log.e("FirebaseError", "Message sending failed: ${e.message}")
+                    }
+
+                // sendMessage(messageText, receiverUid!!)  // Mesaj gönderme işlemini çağırın
+                hideKeyboard()
+            } catch (e: Exception){
+                Log.d("fatoss", "$e")
+            }
+        }
+        getUserMessage()
 
     }
+
     private fun setupFirebaseMessaging() {
-//        val firebaseMessaging = FirebaseMessaging.getInstance()
-//        firebaseMessaging.subscribeToTopic("Chats") // Bu, konuya abone olmayı sağlar
-//
+        val firebaseMessaging = FirebaseMessaging.getInstance()
+        firebaseMessaging.subscribeToTopic("Chats") // Bu, konuya abone olmayı sağlar
+
 //        val service = MyFirebaseMessagingService()
 //
 //        firebaseMessaging.token.addOnCompleteListener { task ->
@@ -206,20 +222,19 @@ class ChatFragment : Fragment() {
 //                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
 //            }
 //        }
-        val firebaseMessaging = FirebaseMessaging.getInstance()
-        firebaseMessaging.token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val token = task.result
-                Log.d("tokenn", "Firebase token: $token")
-                // Token'ı saklayın
-              //  receiverFCMToken = token
-            } else {
-                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
-            }
-        }
-
+//        val firebaseMessaging = FirebaseMessaging.getInstance()
+//        firebaseMessaging.token.addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val token = task.result
+//                Log.d("tokenn", "Firebase token: $token")
+//
+//                // Token'ı saklayın, bu şekilde mesaj gönderirken kullanabilirsiniz
+//                receiverFCMToken = token
+//            } else {
+//                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
+//            }
+//        }
     }
-
 
     //    private fun sendMessage(messageText: String, title: String) {
 //        if (messageText.isNotEmpty()) {
@@ -261,11 +276,14 @@ class ChatFragment : Fragment() {
         }
     }
 
+
     private fun getMessage() {
-        val userIdList: ArrayList<String> = ArrayList()
         var message: Message? = null
         if (senderUid != null && receiverUid != null) {
-        databaseReference.child("Chats").child(senderUid!!).child(receiverUid!!).child("messages")
+        databaseReference.child("Chats")
+            .child(senderUid!!)
+            .child(receiverUid!!)
+            .child("messages").orderByChild("timeStamp")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (dataSnapshot in snapshot.children) {
@@ -273,7 +291,7 @@ class ChatFragment : Fragment() {
                         message?.let {
                             if (!messages.contains(it)) {
                                 messages.add(it)
-                                it.messageId?.let { messageId -> userIdList.add(messageId) }
+                                //it.messageId?.let { messageId -> userIdList.add(messageId) }
                             }
                         }
                         Log.d("messagess", "$messages")
@@ -291,56 +309,30 @@ class ChatFragment : Fragment() {
     }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 25) {
-            if (data != null) {
-                val selectedImage = data.data
+    private fun fetchReceiverToken() {
+        val tokenReference = databaseReference.child("Token").child(receiverUid!!)
 
-
+        tokenReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+                    try {
+                        receiverFCMToken = dataSnapshot.child("token").getValue(String::class.java).toString()
+                        Log.e("fatoss", "receiverFCMToken dsdsdsds $receiverFCMToken")
+                    } catch (e: java.lang.Exception) {
+                        Log.e("fatoss", "UAUAUASDUASD ${e.localizedMessage}")
+                    }
+                }
             }
-        }
-    }
-//    private fun fcmToken() {
-//        databaseReference.child("Token").child(receiverUid!!).addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // "Token" düğümü varsa, altındaki veriyi alın
-//                    val tokenData = dataSnapshot.getValue() as? HashMap<String, Any>
-//                    if (tokenData != null) {
-//                        // "token" anahtarını kullanarak FCM token'ı alın
-//                        receiverFCMToken = tokenData["token"] as? String ?: ""
-//                    }
-//                }
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Hata işleme
-//            }
-//        })
-//    }
 
-
-
-
-
-
-    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            // receiverFCMToken = notification.to
-            val response = RetrofitInstance.api.postNotification(notification)
-            if (response.isSuccessful) {
-                Log.d("adad", "Notification sent successfully")
-            } else {
-                Log.e("adad", "Notification sending failed with code: ${response.code()}")
-                Log.e("adad", "Error response body: ${response.errorBody()?.string()}")
-                // Burada bildirim gönderme hatasıyla ilgili işlemleri gerçekleştirebilirsiniz.
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Hata işleme
+                Log.e("FirebaseToken", "Token alımı iptal edildi: ${databaseError.message}")
             }
-        } catch (e: Exception) {
-            Log.e("adad", "Notification sending failed with exception: ${e.toString()}")
-            // Burada bildirim gönderme hatasıyla ilgili işlemleri gerçekleştirebilirsiniz.
-        }
+        })
     }
+
+
+
 
 
     private fun getUsersData(userModel: UserModel) {

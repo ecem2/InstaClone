@@ -106,6 +106,11 @@ class LoginActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(kulAd, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
+                        val userPref = getSharedPreferences("USER_ID", MODE_PRIVATE).edit()
+                        userPref.putString("USER_ID", it.result.user?.uid)
+                        userPref.apply()
+
+
                         editor.apply {
                             putBoolean("isUserLogin", true)
                             editor.commit()

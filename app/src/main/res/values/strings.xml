@@ -10,6 +10,6 @@
     <string name="comment_count">%1$s comments</string>
     <string name="permission_required">Camera access is required to display the camera preview.</string>
     <string name="ok">OK</string>
-    <string name="notification_channel_id">notification_channel_id</string>
+    <string name="notification_channel_id">canberk-odev</string>
     <string name="permission_granted">Permission is granted. You can use the camera now.</string>
 </resources>

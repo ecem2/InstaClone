@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         navController.addOnDestinationChangedListener(listener)
-        this.startService(Intent(this, MyFirebaseMessagingService::class.java))
+        startService(Intent(this@MainActivity, MyFirebaseMessagingService::class.java))
         isRunningValue = true
     }
 

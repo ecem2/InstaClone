@@ -20,6 +20,7 @@ class MessageAdapter(
     private val context: Context,
     private var messages: ArrayList<Message>
 ) : RecyclerView.Adapter<MessageAdapter.MsgHolder>() {
+    var senderUid: String? = null
 
     companion object {
         private const val ITEM_SENT = 1
@@ -43,6 +44,18 @@ class MessageAdapter(
 
     override fun onBindViewHolder(holder: MsgHolder, position: Int) {
         val message = messages[position]
+        senderUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (message.senderId == senderUid) {
+            // Gönderenin mesajını sağ tarafta görüntülemek için gerekli düzenlemeleri yapın
+            holder.tvMessage.textAlignment = View.TEXT_ALIGNMENT_TEXT_END // Mesajı sağa hizalayın
+            holder.image.visibility = View.GONE // Görüntüyü gizleyin
+            // Diğer düzenlemeleri ekleyebilirsiniz.
+        } else {
+            // Alıcının mesajını solda tarafta görüntülemek için gerekli düzenlemeleri yapın
+            holder.tvMessage.textAlignment = View.TEXT_ALIGNMENT_TEXT_START // Mesajı sola hizalayın
+            holder.image.visibility = View.GONE // Görüntüyü gizleyin
+            // Diğer düzenlemeleri ekleyebilirsiniz.
+        }
         holder.tvMessage.text = message.message
 //        if (holder.itemViewType == ITEM_SENT) {
 //            val viewHolder = holder as MsgHolder
