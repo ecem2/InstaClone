@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +24,8 @@ import com.example.myapplication.model.Message
 import com.example.myapplication.model.NotificationData
 import com.example.myapplication.model.PushNotification
 import com.example.myapplication.model.UserModel
-import com.example.myapplication.service.MyFirebaseMessagingService.Companion.token
+import com.example.myapplication.service.MyFirebaseMessagingService
+
 import com.example.myapplication.ui.adapter.MessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -31,12 +34,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.internal.notify
 import org.json.JSONObject
+import java.io.Serializable
 
 import java.util.*
 import kotlin.collections.ArrayList
 
-//const val TOPIC = "/topics/myTopic"
+const val TOPIC = "/topics/myTopic"
 class ChatFragment : Fragment() {
 
     private var _binding: FragmentChatBinding? = null
@@ -53,7 +58,7 @@ class ChatFragment : Fragment() {
     var receiverUid: String? = null
     var receiverFCMToken: String = ""
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,7 +68,10 @@ class ChatFragment : Fragment() {
         databaseReference = FirebaseDatabase.getInstance().reference
         firebaseAuth = FirebaseAuth.getInstance()
         senderUid = FirebaseAuth.getInstance().currentUser?.uid
-        //FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            MyFirebaseMessagingService.token = it
+        }
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
 //
 //        dialog = ProgressDialog(requireContext())
@@ -73,7 +81,13 @@ class ChatFragment : Fragment() {
 
     }
 
+    object MyFirebaseMessagingUtil {
 
+        // Your shared functionality here
+        fun onMessageReceiver() {
+            // Implement the shared functionality here
+        }
+    }
 
     fun getUserMessage() {
         val handler = Handler()
@@ -155,18 +169,15 @@ class ChatFragment : Fragment() {
                 )
 
 
-
+               // sendNotification(sendName,messageText)
                 Log.d("FATOSSS", "receiverToken = $receiverFCMToken")
                 if (sendName.isNotEmpty() && messageText.isNotEmpty()) {
-
-//                    sendNotification(
-//                        PushNotification(
-//                            NotificationData(sendName, messageText),
-//                            receiverFCMToken
-//                        )
-//                    )
-
-                    setupFirebaseMessaging()
+                    PushNotification(
+                        NotificationData(sendName, messageText),
+                        receiverFCMToken
+                    ).also {
+                        sendNotification(sendName, messageText)
+                    }
                 }
 
                 binding.messageBox.setText("")
@@ -275,7 +286,25 @@ class ChatFragment : Fragment() {
                 true // Yeni mesajlar eklenince en altta görüntülemek için
         }
     }
+    private fun sendNotification(title: String, message: String) {
+        val notificationData = hashMapOf(
+            "title" to title,
+            "message" to message
+        )
 
+        val notification = hashMapOf(
+            "to" to receiverFCMToken,
+            "data" to notificationData
+        )
+        Log.d("Notification", "Title: $title, Message: $message")
+
+        try {
+            FirebaseMessaging.getInstance().send(notification)
+            Log.d("Notification", "Notification sent successfully")
+        } catch (e: Exception) {
+            Log.e("Notification", "Error sending notification: ${e.message}", e)
+        }
+    }
 
     private fun getMessage() {
         var message: Message? = null
@@ -343,5 +372,9 @@ class ChatFragment : Fragment() {
 
     }
 
+
+}
+
+private fun FirebaseMessaging.send(notification: HashMap<String, Serializable>) {
 
 }

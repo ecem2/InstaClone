@@ -1,5 +1,8 @@
 package com.example.myapplication.ui.main
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -8,7 +11,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -18,6 +23,7 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.service.MyFirebaseMessagingService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.messaging.ktx.remoteMessage
@@ -29,22 +35,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private var isRunningValue: Boolean = true
+    var senderUid: String? = null
     companion object {
         private const val TAG = "MainActivity"
         private const val NOTIFICATION_REQUEST_CODE = 1234
+        const val NOTIFICATION_ID = 101
+        const val CHANNEL_ID = "Canberk-odev"
     }
+     @RequiresApi(Build.VERSION_CODES.O)
      override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          binding = ActivityMainBinding.inflate(layoutInflater)
          setContentView(binding.root)
          FirebaseApp.initializeApp(this)
          onSendMessage()
-         logRegToken()
-         sendUpstream()
-         deviceGroupUpstream()
-         runtimeEnableAutoInit()
+
          askNotificationPermission()
          subscribeTopics()
+         senderUid = FirebaseAuth.getInstance().currentUser?.uid
+
+
          val navHostFragment =
              supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
          navController = navHostFragment.navController

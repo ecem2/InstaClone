@@ -25,21 +25,18 @@ import kotlinx.coroutines.launch
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    val CHANNEL_ID = "canberk-odev"
-    companion object{
+    val CHANNEL_ID = "Canberk-odev"
+    companion object {
         var sharedPref: SharedPreferences? = null
 
-        var token:String?
-            get(){
-                return sharedPref?.getString("token","")
+        var token: String?
+            get() {
+                return sharedPref?.getString("token", "")
             }
-            set(value){
-                sharedPref?.edit()?.putString("token",value)?.apply()
+            set(value) {
+                sharedPref?.edit()?.putString("token", value)?.apply()
             }
-
     }
-
-
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -50,92 +47,48 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        Log.d("FATOS SERVICE", "From: ${remoteMessage.from}")
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this@MyFirebaseMessagingService, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+        // Handle the incoming FCM message here and create a notification as needed.
+        val notificationTitle = remoteMessage.notification?.title
+        val notificationBody = remoteMessage.notification?.body
+
+        createNotificationChannel()
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(remoteMessage.data["title"])
-            .setContentText(remoteMessage.data["message"])
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationBody)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            // Set the intent that will fire when the user taps the notification
-            .setContentIntent(pendingIntent)
+
+        val notificationManager = NotificationManagerCompat.from(this)
+        val notificationId = System.currentTimeMillis().toInt()
+        notificationManager.notify(notificationId, builder.build())
+    }
 
 
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        createNotificationChannel(notificationManager)
-
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "canberk-odev"
-            val channelName = "ChannelFirebaseChat"
+            val channelId = CHANNEL_ID
+            val channelName = "Your Channel Name" // Replace with your channel name
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(remoteMessage.data["title"], remoteMessage.data["message"], importance)
+            val channel = NotificationChannel(channelId, channelName, importance)
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
 
-
-        val pref = getSharedPreferences("PREFS", Context.MODE_PRIVATE)
-        val userUid = pref?.getString("USER_ID", null).toString()
-        sendNotification(
-            PushNotification(
-                NotificationData(
-                    remoteMessage.data["title"].toString(),
-                    remoteMessage.data["message"].toString()
-                ),
-                userUid
-            )
+    private fun getPendingIntent(): PendingIntent {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        return PendingIntent.getActivity(
+            this@MyFirebaseMessagingService,
+            1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
         )
-
-        notificationManager.notify(1, builder.build())
-
-
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        val pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-//        val notification = NotificationCompat.Builder(this,CHANNEL_ID)
-//            .setContentTitle(remoteMessage.data["title"])
-//            .setContentText(remoteMessage.data["message"])
-//            .setPriority(NotificationCompat.PRIORITY_MAX)
-//            .setSmallIcon(R.drawable.ic_notification)
-//            .setContentIntent(pendingIntent)
-//            .build()
-
-//        notificationManager.notify(notificationId,notification)
-
-        // Check if message contains a notification payload.
-        remoteMessage.notification?.let {
-            Log.d("FATOSS SERVICE", "Message Notification Body: ${it.body}")
-        }
     }
 
-    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = RetrofitInstance.api.postNotification(notification)
-            if (response.isSuccessful) {
-                Log.d("fatoss", "Notification sent successfully")
-            } else {
-                Log.e("fatoss", "Notification sending failed with code: ${response.code()}")
-                Log.e("fatoss", "Error response body: ${response.errorBody()?.string()}")
-                // Burada bildirim gönderme hatasıyla ilgili işlemleri gerçekleştirebilirsiniz.
-            }
-        } catch (e: Exception) {
-            Log.e("fatoss", "Notification sending failed with exception: ${e.toString()}")
-            // Burada bildirim gönderme hatasıyla ilgili işlemleri gerçekleştirebilirsiniz.
-        }
-    }
 
-    private fun createNotificationChannel(notificationManager: NotificationManager){
-
-
-
-//        val notificationChannel = NotificationChannel(channelId,channelName,IMPORTANCE_HIGH)
-//            notificationChannel.enableLights(true)
-//            notificationChannel.lightColor = Color.RED
-//            notificationChannel.enableVibration(true)
-//            notificationManager.createNotificationChannel(notificationChannel)
-//
-
-    }
 }

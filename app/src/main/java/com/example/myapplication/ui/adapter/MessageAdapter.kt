@@ -11,7 +11,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
-import com.example.myapplication.databinding.DeleteLayoutBinding
 import com.example.myapplication.databinding.ReceiveMsgBinding
 import com.example.myapplication.databinding.SendMsgBinding
 import com.example.myapplication.model.Message

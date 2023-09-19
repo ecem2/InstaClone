@@ -19,12 +19,13 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_bottom_navigation"
         app:itemIconTint="@drawable/bottom_nav_color"
         android:visibility="visible"
         app:labelVisibilityMode="unlabeled"
+        app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
