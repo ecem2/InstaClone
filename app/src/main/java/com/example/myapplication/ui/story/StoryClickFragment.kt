@@ -14,7 +14,6 @@ import com.example.myapplication.databinding.FragmentStoryClickBinding
 import com.example.myapplication.extension.parcelable
 import com.example.myapplication.model.Story
 import com.example.myapplication.model.UserModel
-import com.example.myapplication.ui.adapter.StoryClickAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import jp.shts.android.storiesprogressview.StoriesProgressView

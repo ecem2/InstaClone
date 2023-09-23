@@ -13,32 +13,41 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/loginText"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
         android:layout_marginTop="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/loginNickname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/loginInfoLL"
         android:src="@drawable/instagram" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginInfoLL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginText"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/loginNickname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/backwithborder"
-        android:fontFamily="@font/raleway_regular"
+        android:fontFamily="@font/helvetica_condensed_bold"
+        android:textColor="@color/black"
         android:paddingStart="10dp"
         android:hint="Email address"
-        android:textSize="25sp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/loginPass"
-        app:layout_constraintTop_toBottomOf="@id/loginText"/>
+        android:textSize="25sp" />
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/loginPass"
         android:layout_width="0dp"
@@ -48,36 +57,47 @@
         android:inputType="textPassword"
         android:paddingStart="10dp"
         android:textSize="25sp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/raleway_regular"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginNickname"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginNickname"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
+        android:fontFamily="@font/helvetica_condensed_bold" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:background="@color/blue"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
+        android:background="@color/blue"
+        android:text="Log In"
+        android:textSize="16sp"
+        android:fontFamily="@font/helvetica_condensed_bold"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/loginLL"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginPass"/>
+        app:layout_constraintTop_toBottomOf="@id/loginInfoLL" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/loginLL"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnLogin">
 
@@ -85,22 +105,23 @@
             android:id="@+id/alreadyLoginTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/raleway_regular"
-            android:textSize="17sp"
-            android:textAllCaps="false"
+            android:fontFamily="@font/helvetica_condensed_bold"
             android:gravity="center"
-            android:text="Don't have an account?"/>
+            android:textColor="@color/black"
+            android:text="Don't have an account?"
+            android:textAllCaps="false"
+            android:textSize="17sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/registerTV"
             android:layout_width="60dp"
             android:layout_height="30dp"
-            android:fontFamily="@font/raleway_bold"
-            android:textSize="14sp"
-            android:textColor="@color/blue"
-            android:textAllCaps="false"
             android:background="#0FFFFFFF"
-            android:text="Sign Up"/>
+            android:fontFamily="@font/helvetica_condensed_bold"
+            android:text="Sign Up"
+            android:textAllCaps="false"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

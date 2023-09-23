@@ -22,6 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="ecem.cg"
+        android:fontFamily="@font/helvetica_condensed_bold"
+
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/commentHomeProfilePhoto"
         app:layout_constraintTop_toTopOf="@id/commentHomeProfilePhoto" />
 

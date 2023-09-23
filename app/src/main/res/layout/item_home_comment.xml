@@ -9,6 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/homeCommentName"
         android:text="ecemcig"
+        android:fontFamily="@font/helvetica_medium_condensed"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <androidx.appcompat.widget.AppCompatTextView
@@ -16,6 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/homeCommentText"
         android:text="aaaaaa"
+        android:fontFamily="@font/helvetica_medium_condensed"
         android:layout_marginLeft="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/homeCommentName"/>

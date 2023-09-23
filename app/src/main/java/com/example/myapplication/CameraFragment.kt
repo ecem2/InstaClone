@@ -39,14 +39,20 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
 
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            startCamera()
-        } else {
-            requestCameraPermission()
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions: Map<String, Boolean> ->
+        if (permissions[Manifest.permission.CAMERA] == true) {
+            if (permissions.values.all { it }) {
+                // Tüm izinler verildiyse, kamera başlatılabilir.
+                startCamera()
+            } else {
+                // Bir veya daha fazla izin reddedildi, gerekirse kullanıcıya açıklama yapabilirsiniz.
+                // requestCameraPermission() fonksiyonunu yeniden çağırabilirsiniz.
+                requestCameraPermission()
+            }
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,10 +71,10 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestCameraPermission()
 
         binding.cameraButton.setOnClickListener { takePhoto() }
     }
+
 
     private fun requestCameraPermission() {
         when {
@@ -90,12 +96,12 @@ class CameraFragment : Fragment() {
                     getString(R.string.ok)
                 ) {
                     requestPermissionLauncher.launch(
-                        Manifest.permission.CAMERA
+                        arrayOf(Manifest.permission.CAMERA)
                     )
                 }
             }
 
-            else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            else -> requestPermissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
         }
     }
 

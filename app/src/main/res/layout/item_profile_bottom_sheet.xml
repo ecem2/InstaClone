@@ -36,10 +36,10 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="15dp"
                 android:text="Settings and privacy"
+                android:fontFamily="@font/helvetica_medium_condensed"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -72,7 +72,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -103,9 +104,9 @@
                 android:layout_marginStart="12dp"
                 android:text="Archive"
                 android:textAllCaps="false"
+                android:fontFamily="@font/helvetica_medium_condensed"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -139,7 +140,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -173,7 +175,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -208,7 +211,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -243,7 +247,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -278,7 +283,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/red"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/helvetica_medium_condensed" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

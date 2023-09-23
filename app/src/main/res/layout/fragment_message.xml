@@ -13,7 +13,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/messageToolBar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:contentInsetStart="0dp"
@@ -50,7 +50,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/helvetica_condensed_bold"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -100,6 +100,7 @@
                 android:layout_marginHorizontal="7dp"
                 android:background="@null"
                 android:hint="Search"
+                android:fontFamily="@font/helvetica_condensed_bold"
                 android:padding="7dp"
                 android:textAllCaps="false"
                 app:iconifiedByDefault="false"
@@ -126,6 +127,7 @@
                 android:layout_marginStart="15dp"
                 android:gravity="center"
                 android:text="Messages"
+                android:fontFamily="@font/helvetica_condensed_bold"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -142,6 +144,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                android:fontFamily="@font/helvetica_condensed_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:textColor="@color/black"
         android:text="ecem.cg"
+        android:fontFamily="@font/helvetica_condensed_bold"
         app:layout_constraintStart_toEndOf="@id/messageProfilePhoto"
         app:layout_constraintTop_toTopOf="@id/messageProfilePhoto" />
     <androidx.appcompat.widget.AppCompatTextView
@@ -29,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Message"
+        android:fontFamily="@font/helvetica_condensed_bold"
         app:layout_constraintStart_toEndOf="@id/messageProfilePhoto"
         app:layout_constraintTop_toBottomOf="@+id/messageNickName" />
     <androidx.appcompat.widget.AppCompatTextView

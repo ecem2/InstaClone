@@ -19,7 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:textColor="@color/black"
         tools:text="ecem.cg"
+        android:fontFamily="@font/helvetica_condensed_bold"
         app:layout_constraintStart_toEndOf="@id/likeHomeProfilePhoto"
         app:layout_constraintTop_toTopOf="@id/likeHomeProfilePhoto" />
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,6 +30,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         tools:text="Ecem Cig"
+        android:fontFamily="@font/helvetica_condensed_bold"
         app:layout_constraintTop_toBottomOf="@+id/likeNickname"
         app:layout_constraintStart_toEndOf="@+id/likeHomeProfilePhoto"/>
     <androidx.appcompat.widget.AppCompatButton
@@ -36,6 +39,7 @@
         android:layout_height="40dp"
         android:background="@drawable/like_followed_bg"
         android:text="Following"
+        android:fontFamily="@font/helvetica_condensed_bold"
         android:textAllCaps="false"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

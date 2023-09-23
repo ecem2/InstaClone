@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textStyle="bold|normal"
+            android:fontFamily="@font/helvetica_medium_condensed"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
