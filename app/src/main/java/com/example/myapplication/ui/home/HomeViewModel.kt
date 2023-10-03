@@ -5,10 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.model.Comment
 import com.example.myapplication.model.PostModel
 import com.example.myapplication.model.UserModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -35,21 +34,30 @@ class HomeViewModel : ViewModel() {
 
     fun getPostData() = viewModelScope.launch(Dispatchers.IO) {
         val postList: ArrayList<PostModel> = ArrayList()
-        val userLikedList: ArrayList<PostModel> = ArrayList()
         database.child("Posts")
-            .orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
+            .orderByChild("timestamp")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    for (i in snapshot.children) {
-                        if (snapshot.exists()) {
-                            val post: PostModel? = i.getValue<PostModel>()
-                            if (post != null) {
-                                postList.add(post)
-                            }
+                    if (snapshot.exists()) {
+                        for (i in snapshot.children) {
+                            val postHashMap = i.getValue<HashMap<String, Any>>()
+                            val postModel = PostModel(
+                                userId = postHashMap?.get("userId") as? String,
+                                timestamp = postHashMap?.get("timestamp") as? String,
+                                isLike = postHashMap?.get("isLike") as? Boolean ?: false,
+                                postPhoto = postHashMap?.get("postPhoto") as? ArrayList<String>,
+                                likeArray = postHashMap?.get("likeArray") as? ArrayList<String>,
+                                postId = postHashMap?.get("postId") as? String,
+                                comments = postHashMap?.get("comments") as? ArrayList<Comment>
+                            )
+                            postList.add(postModel)
                         }
+                        _postsData.value?.clear()
+                        postList.reverse()
+                        _postsData.postValue(postList)
+                    } else {
+                        Log.d("ecco", "aaaa $_postsData")
                     }
-
-                    postList.reverse()
-                    _postsData.postValue(postList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -57,6 +65,7 @@ class HomeViewModel : ViewModel() {
                 }
             })
     }
+
 
     fun getUsersData() = viewModelScope.launch(Dispatchers.IO) {
         val userList: ArrayList<UserModel> = ArrayList()
@@ -83,11 +92,13 @@ class HomeViewModel : ViewModel() {
     // todo usttekinden de cekilebilir
     fun getStoryData() = viewModelScope.launch(Dispatchers.IO) {
         val storyList: ArrayList<UserModel> = ArrayList()
+
         database.child("Users").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshotUser: DataSnapshot) {
                 for (snap in snapshotUser.children) {
                     val story = snap.getValue(UserModel::class.java)
-                    if (story != null) {
+
+                    if (story != null && story.userStory != null && story.userStory.isNotEmpty()) {
                         storyList.add(story)
                     }
                 }
@@ -99,5 +110,7 @@ class HomeViewModel : ViewModel() {
             }
         })
     }
+
+
 
 }

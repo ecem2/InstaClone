@@ -10,8 +10,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolBarUser"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toTopOf="@+id/usersCardConstraint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -19,9 +21,9 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/profileBack"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_insta_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/helvetica_condensed_bold"
+                android:fontFamily="@font/sf_pro_text_bold"
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="18dp"
@@ -43,20 +45,20 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/notificationButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/ic_notification"
+                android:src="@drawable/ic_insta_notification"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/optionButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/optionButton"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_options"
+                android:src="@drawable/ic_insta_three_point"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -68,7 +70,7 @@
             android:id="@+id/usersCardConstraint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,21 +78,20 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/usersProfile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_marginStart="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/nameTV"
-                app:layout_constraintEnd_toStartOf="@+id/postCountLL"
-                tools:src="@drawable/ic_fifth" />
+                app:layout_constraintEnd_toStartOf="@+id/postCountLL"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:fontFamily="@font/helvetica_condensed_bold"
+                android:fontFamily="@font/sf_pro_text_bold"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="@+id/usersProfile"
                 app:layout_constraintStart_toStartOf="@+id/usersProfile"
@@ -98,10 +99,10 @@
                 tools:text="Ecem Cig" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/userBio"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:fontFamily="@font/helvetica_condensed_bold"
+                android:fontFamily="@font/sf_pro_text_regular"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nameTV"
                 tools:text="Ecem Cig" />
@@ -122,7 +123,7 @@
                     android:id="@+id/postCountTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/sf_pro_text_bold"
                     android:textColor="@color/black"
                     tools:text="100" />
 
@@ -130,7 +131,7 @@
                     android:id="@+id/post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/helvetica_medium_condensed"
+                    android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/black"
                     android:text="Posts" />
 
@@ -152,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/sf_pro_text_bold"
                     android:gravity="center"
                     android:textColor="@color/black"
 
@@ -163,8 +164,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/helvetica_medium_condensed"
-                    android:textColor="@color/black"                    android:gravity="center"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/black"
+                    android:gravity="center"
                     android:text="Followers" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -184,7 +186,7 @@
                     android:id="@+id/followCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
+                    android:fontFamily="@font/sf_pro_text_bold"
                     android:textColor="@color/black"
                     tools:text="100" />
 
@@ -192,7 +194,7 @@
                     android:id="@+id/usersFollow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/helvetica_medium_condensed"
+                    android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/black"
                     android:text="Following"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -204,18 +206,18 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/profileFollowButton"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/ic_button_bg"
                 android:text="Follow"
+                android:fontFamily="@font/sf_pro_text_bold"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/userBio"
-                app:layout_constraintVertical_bias="0.238" />
+                app:layout_constraintTop_toBottomOf="@+id/userBio" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/usersLL"
@@ -238,8 +240,9 @@
                     android:background="@drawable/followed_message_bg"
                     android:gravity="center"
                     android:text="Following"
+                    android:fontFamily="@font/sf_pro_text_bold"
                     android:textColor="@color/green"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/messageButton"

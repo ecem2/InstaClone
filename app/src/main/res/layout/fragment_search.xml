@@ -10,9 +10,9 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/backButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_left_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_insta_back"
         android:layout_marginStart="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/searchLY"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/searchLY"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_margin="16dp"
         android:padding="6dp"
         android:background="@drawable/ic_edit_text_bg"
@@ -31,22 +31,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_fragment_search" />
+            android:src="@drawable/ic_insta_search" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="7dp"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/helvetica_condensed_bold"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:background="@null"
             android:hint="Search"
+            android:textSize="15sp"
             android:textAllCaps="false"
-            android:padding="5dp"
             app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

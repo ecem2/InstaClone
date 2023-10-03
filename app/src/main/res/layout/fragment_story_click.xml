@@ -34,14 +34,17 @@
         android:id="@+id/storiesProgressView"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_gravity="top"
+        app:tint="@color/white"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/storyPhoto"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/toolBarStory"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,23 +61,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/storiesProgressView">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/storyOption"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            app:tint="@color/white"
-            android:src="@drawable/ic_options"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/storyProfilePhoto"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:civ_border_color="#FF000000"
+            android:layout_marginStart="15dp"
+            android:background="@color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/storyExit"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/storyNickname"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:src="@drawable/ic_fifth" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/storyNickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/sf_pro_text_medium"
+            android:gravity="center|start"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/storyProfilePhoto"
+            app:layout_constraintStart_toEndOf="@+id/storyProfilePhoto"
+            app:layout_constraintTop_toTopOf="@+id/storyProfilePhoto"
+            tools:text="ecemcig" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/storyExit"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:src="@drawable/ic_exit"
+            android:src="@drawable/ic_insta_story_exit"
             app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -82,59 +100,54 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/storyProfilePhoto"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="20dp"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
-        app:layout_constraintEnd_toStartOf="@+id/storyNickname"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/storiesProgressView"
-        tools:src="@drawable/ic_fifth" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/storyNickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:fontFamily="@font/helvetica_condensed_bold"
-        android:gravity="center"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/storyProfilePhoto"
-        app:layout_constraintStart_toEndOf="@+id/storyProfilePhoto"
-        app:layout_constraintTop_toTopOf="@+id/storyProfilePhoto"
-        tools:text="ecemcig" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolBarStory"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="52dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/storyPhoto">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/storyCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_insta_story_camera"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editTextStory"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/oval_edittext"
-            android:paddingStart="10dp"
-            android:text="Mesaj Gönder"
+            android:layout_marginEnd="20dp"
+            android:paddingStart="55dp"
+            android:text="Send Message"
+            android:textColor="@color/white"
             android:textAllCaps="false"
+            android:fontFamily="@font/sf_pro_text_regular"
+            app:layout_constraintEnd_toStartOf="@+id/storyLikeButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/storyLikeButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_insta_story_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/storySendButton"
             app:layout_constraintStart_toEndOf="@+id/editTextStory"
@@ -142,9 +155,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/storySendButton"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_insta_story_three_point"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/storyLikeButton"

@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="2dp"
                 android:src="@drawable/ic_settings" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -36,16 +37,17 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="15dp"
                 android:text="Settings and privacy"
-                android:fontFamily="@font/helvetica_medium_condensed"
+                android:fontFamily="@font/sf_pro_text_bold"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/settingsView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/settingsLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -70,16 +72,16 @@
                 android:layout_marginStart="11dp"
                 android:text="Your activity"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed"
-                />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/activityView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/activityLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -104,15 +106,16 @@
                 android:layout_marginStart="12dp"
                 android:text="Archive"
                 android:textAllCaps="false"
-                android:fontFamily="@font/helvetica_medium_condensed"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:fontFamily="@font/sf_pro_text_bold"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/archiveView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/archiveLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -138,16 +141,17 @@
                 android:layout_marginStart="8dp"
                 android:text="QR code"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/qrCodeView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/qrCodeLYLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -173,16 +177,16 @@
                 android:layout_marginStart="15dp"
                 android:text="Saved"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed"
-                />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/savedView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/savedLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -209,16 +213,17 @@
                 android:layout_marginStart="11dp"
                 android:text="Close Friends"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/closeFriendsView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/closeFriendsLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -245,16 +250,17 @@
                 android:layout_marginStart="10dp"
                 android:text="Favorites"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:id="@+id/favoritesView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -282,8 +288,8 @@
                 android:text="Log out"
                 android:textAllCaps="false"
                 android:textColor="@color/red"
-                android:textSize="20dp"
-                android:fontFamily="@font/helvetica_medium_condensed" />
+                android:textSize="18sp"
+                android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

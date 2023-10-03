@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentMessageBinding
@@ -20,6 +21,7 @@ import com.example.myapplication.model.UserModel
 import com.example.myapplication.service.MyFirebaseMessagingService
 import com.example.myapplication.ui.adapter.MessageAdapter
 import com.example.myapplication.ui.adapter.MessageItemAdapter
+import com.example.myapplication.ui.home.HomeFragment
 import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -67,6 +69,10 @@ class MessageFragment : Fragment() {
         setupRecyclerMessageView()
         getUsersChatData()
         //  fetchChatMessages()
+        binding.messageBack.setOnClickListener {
+            val viewPager = requireActivity().findViewById<ViewPager2>(R.id.homeViewPager)
+            viewPager.currentItem = 1
+        }
     }
 
     private fun setupRecyclerMessageView() {

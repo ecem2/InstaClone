@@ -68,8 +68,7 @@ class NewMessageFragment : Fragment() {
                 bundle.putParcelable("clickedUserIdModel", searchItem) // UserModel'ı parcelable olarak bundle'a ekliyoruz
 
                 val chatFragment = ChatFragment()
-                chatFragment.arguments = bundle // Bundle'ı ChatFragment'a ekliyoruz
-
+                chatFragment.arguments = bundle
                 val fragmentTransaction = parentFragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.fragment_container, chatFragment)
                 fragmentTransaction.addToBackStack(null)
@@ -86,7 +85,11 @@ class NewMessageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
+            val messageFragment = MessageFragment()
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.searchPage, messageFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
 

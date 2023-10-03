@@ -7,14 +7,13 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/commentHomeProfilePhoto"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_margin="20dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_fifth" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentNickname"
@@ -22,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="ecem.cg"
-        android:fontFamily="@font/helvetica_condensed_bold"
-
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:textSize="12sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/commentHomeProfilePhoto"
         app:layout_constraintTop_toTopOf="@id/commentHomeProfilePhoto" />
@@ -33,7 +32,7 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_like"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,10 +49,14 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/comment"
-        android:layout_width="50dp"
-        android:layout_height="20dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text=" "
+        android:textSize="14sp"
+        android:fontFamily="@font/sf_pro_text_bold"
+        app:layout_constraintBottom_toTopOf="@+id/commentAnswer"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/commentHomeProfilePhoto"
         app:layout_constraintTop_toBottomOf="@+id/commentNickname" />
 
@@ -64,7 +67,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
         android:text="Reply"
+        android:textSize="12sp"
         android:textAllCaps="false"
+        android:fontFamily="@font/sf_pro_text_regular"
         app:layout_constraintStart_toEndOf="@+id/commentLikeCount"
         app:layout_constraintTop_toBottomOf="@+id/comment" />
 

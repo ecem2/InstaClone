@@ -10,8 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.AddPostFragmentDirections
-import com.example.myapplication.HomePageFragmentDirections
+import com.example.myapplication.*
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
 import com.example.myapplication.model.UserModel
@@ -22,9 +21,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-
-
-// TODO Fragmentta Activitydki 'this' yerine requireContext() KULLANILIR!!!!
 
 class HomeFragment : Fragment() {
 
@@ -106,7 +102,6 @@ class HomeFragment : Fragment() {
                 val bundle = Bundle()
                 bundle.putParcelable("clickedUserId", storyItem)
                 findNavController().navigate(R.id.storyClickFragment, bundle)
-
             })
 
         binding.storiesRecyclerView.apply {
@@ -126,6 +121,14 @@ class HomeFragment : Fragment() {
         getUsersData()
         viewModel.getStoryData()
         getStoryData()
+
+        binding.messengerButton.setOnClickListener {
+            val messageFragment = MessageFragment()
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.home_fragment_container,messageFragment )
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
 
     }
 

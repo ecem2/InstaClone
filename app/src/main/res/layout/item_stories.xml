@@ -12,18 +12,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="6dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/storyColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_insta_story_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/storyNickname"
+            app:layout_constraintEnd_toEndOf="parent"/>
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/storyView"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/purple"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/storyNickname"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:src="@drawable/ic_fifth" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
 
@@ -33,10 +40,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/black"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:fontFamily="@font/sf_pro_text_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/storyView"
+            app:layout_constraintTop_toBottomOf="@+id/storyColor"
             android:text="ecemcig" />
 
 

@@ -87,11 +87,14 @@ class MainActivity : AppCompatActivity() {
                     val navBar: BottomNavigationView = findViewById(R.id.bottomNavigationView)
                     navBar.visibility = View.GONE
                 }
+                R.id.chatFragment -> {
+                    val navBar: BottomNavigationView = findViewById(R.id.bottomNavigationView)
+                    navBar.visibility = View.GONE
+                }
                 R.id.messageFragment -> {
                     val navBar: BottomNavigationView = findViewById(R.id.bottomNavigationView)
                     navBar.visibility = View.GONE
                 }
-
                 else -> {
                     val navBar: BottomNavigationView = findViewById(R.id.bottomNavigationView)
                     navBar.visibility = View.VISIBLE

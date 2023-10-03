@@ -34,7 +34,7 @@
         android:layout_marginStart="16dp"
         android:gravity="center"
         android:textColor="@color/black"
-        android:fontFamily="@font/helvetica_condensed_bold"
+        android:fontFamily="@font/sf_pro_text_bold"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/searchPhoto"
         app:layout_constraintStart_toEndOf="@+id/searchPhoto"

@@ -50,7 +50,6 @@ class ProfilePostFragment : Fragment() {
         }
     }
 
-    // todo KOTLINDE LISTEDE ELEMAN TEKRARINI ENGELLEME(ayni olan elemanlari kaldirma)
 
     private fun getPostData(userUUID: String) {
         database.orderByChild("timestamp").addListenerForSingleValueEvent(object :
@@ -59,20 +58,23 @@ class ProfilePostFragment : Fragment() {
                 for (snapshot in dataSnapshot.children) {
                     if (snapshot.exists()) {
                         val post: PostModel? = snapshot.getValue(PostModel::class.java)
-                        val photoUrl = snapshot.getValue(PostModel::class.java)!!.postPhoto
+                        if (post != null && post.userId == userUUID) {
+                            val photoUrl = post.postPhoto
+                            photoUrl?.reverse()
 
-                        if (post?.userId.toString() == userUUID) {
-                            if (!postsData.contains(photoUrl.toString())) {
-                                postsData.add(photoUrl?.first().toString())
-                                postsData.reverse()
-                            }
+//                            if (post.userId.toString() == userUUID) {
+//                                if (!postsData.contains(photoUrl.toString())) {
+//                                    postsData.add(photoUrl?.first().toString())
+//                                    postsData.reverse()
+//                                }
+//                            }
                         }
                     }
                 }
-Log.d("Fatooosss","$userUUID")
-                usersAdapter.submitPostPhotoList(postsData)
+                  Log.d("Fatooosss","$userUUID")
+                  usersAdapter.submitPostPhotoList(postsData)
 
-                Log.d("fatoss", "CURRENT USER DATA $postsData")
+                   Log.d("fatoss", "CURRENT USER DATA $postsData")
             }
 
             override fun onCancelled(error: DatabaseError) {

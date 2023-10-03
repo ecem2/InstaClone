@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentStoryClickBinding
@@ -17,12 +18,13 @@ import com.example.myapplication.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import jp.shts.android.storiesprogressview.StoriesProgressView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
 
     private var counter = 0
     private lateinit var database: DatabaseReference
-    private var storiesProgressView: StoriesProgressView? = null
     private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var binding: FragmentStoryClickBinding
@@ -70,12 +72,8 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
         binding.storyExit.setOnClickListener {
             findNavController().popBackStack()
         }
-        storiesProgressView = binding.storiesProgressView
-
         database = FirebaseDatabase.getInstance().reference
-        fetchUserStoriesFromFirebase()
-        getSelectedUserData()
-        clickListeners()
+
 //        database.child("Users").child(clickedUserId!!).child("userStory")
 //            .addListenerForSingleValueEvent(object : ValueEventListener {
 //                override fun onDataChange(snapshot: DataSnapshot) {
@@ -96,11 +94,18 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
 //                }
 //            })
 
+        requireActivity().runOnUiThread {
+            fetchUserStoriesFromFirebase()
+        }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        getSelectedUserData()
+        clickListeners()
 
         arguments?.let {
             val translation = it.parcelable<UserModel>("clickedUserId")
@@ -110,13 +115,14 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
                     .into(binding.storyProfilePhoto)
                 binding.storyNickname.text = translation.userNickName
                 Glide.with(requireContext())
-                    .load(translation.userStory?.get(0))
+                    .load(translation.userStory?.get(storyIndex))
                     .into(binding.storyPhoto)
                 binding.storiesProgressView.visibility = View.VISIBLE
                 Log.d("salimmm", "translationtranslation ${translation}")
             }
         }
     }
+
     private fun fetchUserStoriesFromFirebase() {
         database.child("Users").child(userId!!).child("userStory")
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -132,14 +138,14 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
                                 userHasStory.add(
                                     Story(
                                         index = currentIndex,
-                                        user = storyData!!
+                                        user = storyData
                                     )
                                 )
                             }
                         }
 
                         // Verileri aldıktan sonra setupStoryView'ı çağırın
-                       setupStoryView(storyList)
+                        setupStoryView(storyList)
                     }
                 }
 
@@ -150,20 +156,19 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
     }
 
     private fun setupStoryView(storyList: ArrayList<String>) {
-        storiesProgressView = binding.storiesProgressView
-        Log.d("StoryClickFragment", "storiesProgressView: $storiesProgressView")
+        binding.apply {
+            storiesProgressView.setStoriesCount(storyList.size)
+            Log.d("StoryClickFragment", "setStoriesCount called")
 
-        storiesProgressView?.setStoriesCount(storyList.size)
-        Log.d("StoryClickFragment", "setStoriesCount called")
+            storiesProgressView.setStoryDuration(3000L)
+            Log.d("StoryClickFragment", "setStoryDuration called")
 
-        storiesProgressView?.setStoryDuration(3000L)
-        Log.d("StoryClickFragment", "setStoryDuration called")
+            storiesProgressView.setStoriesListener(this@StoryClickFragment)
+            Log.d("StoryClickFragment", "setStoriesListener called")
 
-        storiesProgressView?.setStoriesListener(this)
-        Log.d("StoryClickFragment", "setStoriesListener called")
-
-      //  storiesProgressView?.startStories()
-        Log.d("StoryClickFragment", "startStories called")
+            storiesProgressView.startStories()
+            Log.d("StoryClickFragment", "startStories called")
+        }
     }
 
     private fun clickListeners() {
@@ -198,21 +203,26 @@ class StoryClickFragment : Fragment(), StoriesProgressView.StoriesListener {
 
     override fun onNext() {
         if (counter < userHasStory.size - 1) {
+            storyIndex = 0
             counter++
-            Glide.with(requireContext()).load(userHasStory[counter].user?.userStory?.get(storyIndex))
+            Glide.with(requireContext())
+                .load(userHasStory[counter].user?.userStory?.get(storyIndex))
                 .into(binding.storyPhoto)
+            Log.d("aaaa","$counter")
         } else {
-            // Tüm hikayeleri tamamladıysanız bir sonraki sayfaya gitmek için
             onStoryCompleted()
         }
     }
 
     override fun onPrev() {
-        if (counter - 1 < 0) return
-        Glide.with(requireContext()).load(userHasStory[--counter])
-            .into(binding.storyPhoto)
+        if (counter - 1 >= 0) {
+            storyIndex = 0
+            counter--
+            Glide.with(requireContext())
+                .load(userHasStory[counter].user?.userStory?.get(storyIndex))
+                .into(binding.storyPhoto)
+        }
     }
-
     override fun onComplete() {
         onStoryCompleted()
     }

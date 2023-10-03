@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/homeCommentName"
         android:text="ecemcig"
-        android:fontFamily="@font/helvetica_medium_condensed"
+        android:textSize="13sp"
+        android:fontFamily="@font/sf_pro_text_bold"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -18,7 +19,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/homeCommentText"
         android:text="aaaaaa"
-        android:fontFamily="@font/helvetica_medium_condensed"
+        android:textSize="13sp"
+        android:fontFamily="@font/sf_pro_text_medium"
         android:layout_marginLeft="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/homeCommentName"/>

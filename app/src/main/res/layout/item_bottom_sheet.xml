@@ -23,13 +23,14 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Restrict"
-            android:textColor="@color/red"
-            android:textStyle="bold" />
+            android:fontFamily="@font/sf_pro_text_bold"
+            android:textColor="@color/red"/>
 
         <View
             android:id="@+id/favoritesView"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -41,11 +42,12 @@
             android:gravity="center"
             android:text="Block"
             android:textColor="@color/red"
-            android:textStyle="bold" />
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -57,11 +59,12 @@
             android:gravity="center"
             android:text="Report"
             android:textColor="@color/red"
-            android:textStyle="bold" />
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -72,12 +75,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="About this account"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -89,12 +93,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Hide your story"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -105,12 +110,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Remove follower"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -121,12 +127,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Copy profile URL"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -137,12 +144,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Share this profile"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -153,12 +161,13 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="QR code"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/favoritesLY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -169,8 +178,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Cancel"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:fontFamily="@font/sf_pro_text_bold" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -45,10 +45,11 @@ class CameraFragment : Fragment() {
             if (permissions.values.all { it }) {
                 // Tüm izinler verildiyse, kamera başlatılabilir.
                 startCamera()
+                hasCameraFeature()
             } else {
                 // Bir veya daha fazla izin reddedildi, gerekirse kullanıcıya açıklama yapabilirsiniz.
                 // requestCameraPermission() fonksiyonunu yeniden çağırabilirsiniz.
-                requestCameraPermission()
+                isCameraPermissionGranted()
             }
         }
     }
@@ -71,38 +72,19 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (isCameraPermissionGranted() && hasCameraFeature()) {
+            startCamera()
+        } else {
+        }
         binding.cameraButton.setOnClickListener { takePhoto() }
     }
 
 
-    private fun requestCameraPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // Kamera izni zaten verilmiş, burada gerekirse kamera görünümünü başlatabilirsiniz.
-                startCamera()
-            }
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.CAMERA
-            ) -> {
-                showSnackbar(
-                    this.requireView(),
-                    getString(R.string.permission_required),
-                    Snackbar.LENGTH_INDEFINITE,
-                    getString(R.string.ok)
-                ) {
-                    requestPermissionLauncher.launch(
-                        arrayOf(Manifest.permission.CAMERA)
-                    )
-                }
-            }
-
-            else -> requestPermissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
-        }
+    private fun isCameraPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun startCamera() {
@@ -165,7 +147,9 @@ class CameraFragment : Fragment() {
             snackbar.show()
         }
     }
-
+    private fun hasCameraFeature(): Boolean {
+        return requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+    }
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -206,21 +190,23 @@ class CameraFragment : Fragment() {
 
                     binding.apply {
                         cameraButton.visibility = View.GONE
-                        cameraNext.visibility = View.VISIBLE
+                        //cameraNext.visibility = View.VISIBLE
                         viewFinder.visibility = View.GONE
                         imagePreview.visibility = View.VISIBLE
 
                         Glide.with(requireContext()).load(output.savedUri).into(imagePreview)
                     }
 
-                    binding.cameraNext.setOnClickListener {
-                        val bundle = Bundle().apply {
-                            putParcelable("imageUri", output.savedUri)
-                        }
+//                    binding.cameraNext.setOnClickListener {
+//                        val bundle = Bundle().apply {
+//                            putParcelable("imageUri", output.savedUri)
+//                        }
 
-                        val addPostNextFragment = AddPostNextFragment()
-                        addPostNextFragment.arguments = bundle
-                    }
+//                        val addPostNextFragment = AddPostNextFragment()
+//                        addPostNextFragment.arguments = bundle
+//                    }
+
+
 
 //                        // FragmentTransaction ile geçişi yönet
 //                        val fragmentManager = parentFragmentManager

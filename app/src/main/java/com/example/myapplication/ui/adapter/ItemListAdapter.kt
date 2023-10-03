@@ -150,11 +150,11 @@ class ItemListAdapter(
         if (postItem.likeArray?.contains(firebaseUser.uid) == true) {
             Log.d("ViewModel", "POST HAVE USER")
             Glide.with(holder.itemView)
-                .load(R.drawable.ic_red_like)
+                .load(R.drawable.ic_insta_red_like)
                 .into(likeImageView)
         } else {
             Glide.with(holder.itemView)
-                .load(R.drawable.ic_like)
+                .load(R.drawable.ic_insta_post_like)
                 .into(likeImageView)
         }
     }
@@ -162,36 +162,29 @@ class ItemListAdapter(
 
     private fun likePost(postItem: PostModel, holder: ItemListViewHolder) {
         val likeButton = holder.itemView.findViewById<ImageView>(R.id.likeButton)
-        likeArrayList.add(firebaseUser.uid)
 
-        val likeRef = postRef.child(postItem.postId.toString()).child("likeArray")
-        likeRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (snap in snapshot.children) {
-                    if (likeArrayList.contains(snap.value.toString())) {
-                        likeArrayList.remove(snap.value.toString())
-                        Glide.with(holder.itemView)
-                            .load(R.drawable.ic_like)
-                            .into(likeButton)
-                        notifyDataSetChanged()
-                    } else {
-                        likeArrayList.add(snap.value.toString())
-                        Glide.with(holder.itemView)
-                            .load(R.drawable.ic_red_like)
-                            .into(likeButton)
+        // Kullanıcının UID'sini beğenme listesine ekleyin veya çıkarın
+        val userLiked = postItem.likeArray?.contains(firebaseUser.uid) == true
+        if (userLiked) {
+            postItem.likeArray?.remove(firebaseUser.uid)
+        } else {
+            postItem.likeArray?.add(firebaseUser.uid)
+        }
 
-                        notifyDataSetChanged()
-                    }
-                }
-                likeRef.setValue(likeArrayList)
-                checkLikeState(holder, postItem)
+        // Beğeni durumunu Firebase veritabanında güncelleyin
+        val postRef = FirebaseDatabase.getInstance().getReference("Posts").child(postItem.postId.toString())
+        postRef.child("likeArray").setValue(postItem.likeArray)
 
-                likeArrayList.clear()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+        // Beğeni simgesini güncelleyin
+        if (userLiked) {
+            Glide.with(holder.itemView)
+                .load(R.drawable.ic_insta_post_like)
+                .into(likeButton)
+        } else {
+            Glide.with(holder.itemView)
+                .load(R.drawable.ic_insta_red_like)
+                .into(likeButton)
+        }
     }
 
 

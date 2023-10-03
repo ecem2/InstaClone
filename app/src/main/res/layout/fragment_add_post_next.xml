@@ -20,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_post_toolabr"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -31,20 +31,20 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBack"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_back"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_insta_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="New post"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:textSize="14sp"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnShare"
@@ -57,9 +57,9 @@
             android:layout_height="match_parent"
             android:text="Share"
             android:gravity="center"
-            android:fontFamily="@font/helvetica_medium_condensed"
-            android:textColor="@color/blue"
-            android:textSize="20sp"
+            android:fontFamily="@font/sf_pro_text_bold"
+            android:textColor="#0884DD"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -94,8 +94,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/et_photo_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_fifth" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_photo_info"
@@ -104,7 +103,7 @@
             android:layout_marginStart="10dp"
             android:background="@null"
             android:elevation="10dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:hint="Write a caption..."
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="@+id/iv_post_image"
@@ -137,8 +136,8 @@
             android:padding="10dp"
             android:text="Tag people"
             android:textColor="@color/black"
-            android:textSize="15dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:textSize="14sp"
+            android:fontFamily="@font/sf_pro_text_bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tagPeopleRight"
             app:layout_constraintHorizontal_bias="0.0"
@@ -173,8 +172,8 @@
             android:padding="10dp"
             android:text="Add location"
             android:textColor="@color/black"
-            android:textSize="15dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:textSize="14sp"
+            android:fontFamily="@font/sf_pro_text_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -203,8 +202,8 @@
             android:padding="10dp"
             android:text="Add music"
             android:textColor="@color/black"
-            android:textSize="15dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:textSize="14sp"
+            android:fontFamily="@font/sf_pro_text_bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/addMusicRight"
             app:layout_constraintStart_toStartOf="parent"
@@ -222,13 +221,13 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textPost"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:padding="10dp"
         android:text="Post to other Instagram accounts"
         android:textColor="@color/black"
-        android:fontFamily="@font/helvetica_medium_condensed"
-        android:textSize="15dp"
+        android:fontFamily="@font/sf_pro_text_bold"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addMusicCL" />
@@ -242,18 +241,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textPost">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="75dp"
-            android:layout_height="45dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/sf_pro_text_bold"
             android:padding="10dp"
             android:text="Facebook"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/switchIcon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -275,8 +276,8 @@
             android:padding="10dp"
             android:text="Advanced settings"
             android:textColor="@color/black"
-            android:textSize="15dp"
-            android:fontFamily="@font/helvetica_medium_condensed"
+            android:textSize="14sp"
+            android:fontFamily="@font/sf_pro_text_bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
