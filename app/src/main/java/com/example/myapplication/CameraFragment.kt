@@ -43,12 +43,9 @@ class CameraFragment : Fragment() {
     ) { permissions: Map<String, Boolean> ->
         if (permissions[Manifest.permission.CAMERA] == true) {
             if (permissions.values.all { it }) {
-                // Tüm izinler verildiyse, kamera başlatılabilir.
                 startCamera()
                 hasCameraFeature()
             } else {
-                // Bir veya daha fazla izin reddedildi, gerekirse kullanıcıya açıklama yapabilirsiniz.
-                // requestCameraPermission() fonksiyonunu yeniden çağırabilirsiniz.
                 isCameraPermissionGranted()
             }
         }
@@ -112,14 +109,11 @@ class CameraFragment : Fragment() {
                     })
                 }
 
-            // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
 
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture, imageAnalyzer
                 )
@@ -151,10 +145,7 @@ class CameraFragment : Fragment() {
         return requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
     }
     private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
@@ -164,8 +155,6 @@ class CameraFragment : Fragment() {
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
             }
         }
-
-        // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(
                 requireContext().contentResolver,
@@ -174,8 +163,6 @@ class CameraFragment : Fragment() {
             )
             .build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(requireContext()),

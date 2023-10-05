@@ -10,8 +10,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:src="@drawable/ic_insta_back"
         android:layout_marginStart="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/searchLY"
@@ -21,9 +21,9 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/searchLY"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_margin="16dp"
-        android:padding="6dp"
+        android:padding="8dp"
         android:background="@drawable/ic_edit_text_bg"
         app:layout_constraintBottom_toTopOf="@+id/searchRV"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +31,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_insta_search" />
 
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="7dp"
-            android:fontFamily="@font/sf_pro_text_bold"
+            android:fontFamily="@font/sf_pro_text_semibold"
             android:background="@null"
             android:hint="Search"
             android:textSize="15sp"
