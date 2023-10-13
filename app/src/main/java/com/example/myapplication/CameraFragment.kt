@@ -38,16 +38,24 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
 
-    private val requestPermissionLauncher = registerForActivityResult(
+    private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions: Map<String, Boolean> ->
-        if (permissions[Manifest.permission.CAMERA] == true) {
-            if (permissions.values.all { it }) {
-                startCamera()
-                hasCameraFeature()
+        val cameraPermissionGranted = permissions[Manifest.permission.CAMERA] == true
+        val readStoragePermissionGranted =
+            permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
+        val writeStoragePermissionGranted =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
             } else {
-                isCameraPermissionGranted()
+                true
             }
+
+        if (cameraPermissionGranted && readStoragePermissionGranted && writeStoragePermissionGranted) {
+            startCamera()
+            hasCameraFeature()
+        } else {
+            isCameraPermissionGranted()
         }
     }
 
@@ -69,14 +77,37 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isCameraPermissionGranted() && hasCameraFeature()) {
-            startCamera()
-        } else {
-        }
+        checkAndRequestCameraPermissions()
         binding.cameraButton.setOnClickListener { takePhoto() }
     }
 
+    private fun checkAndRequestCameraPermissions() {
+        val permissionList = mutableListOf<String>()
+        if (!isCameraPermissionGranted()) {
+            permissionList.add(Manifest.permission.CAMERA)
+        }
+        if (!isReadStoragePermissionGranted()) {
+            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !isWriteStoragePermissionGranted()) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
 
+        cameraPermissionLauncher.launch(permissionList.toTypedArray())
+    }
+    private fun isReadStoragePermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun isWriteStoragePermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
     private fun isCameraPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
@@ -88,10 +119,8 @@ class CameraFragment : Fragment() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            // Preview
             val preview = Preview.Builder()
                 .build()
                 .also {
@@ -183,28 +212,6 @@ class CameraFragment : Fragment() {
 
                         Glide.with(requireContext()).load(output.savedUri).into(imagePreview)
                     }
-
-//                    binding.cameraNext.setOnClickListener {
-//                        val bundle = Bundle().apply {
-//                            putParcelable("imageUri", output.savedUri)
-//                        }
-
-//                        val addPostNextFragment = AddPostNextFragment()
-//                        addPostNextFragment.arguments = bundle
-//                    }
-
-
-
-//                        // FragmentTransaction ile geçişi yönet
-//                        val fragmentManager = parentFragmentManager
-//                        val transaction = fragmentManager.beginTransaction()
-//                        transaction.replace(R.id.fragment_container, addPostNextFragment)
-//                        transaction.addToBackStack(null)
-//                        transaction.commit()
-//                        Log.d("transactionaaa", "$transaction")
-//                        Log.d(TAG, msg)
-
-
                 }
             }
         )

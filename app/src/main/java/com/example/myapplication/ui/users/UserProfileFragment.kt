@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentUserProfileBinding
+import com.example.myapplication.extension.parcelable
 import com.example.myapplication.model.PostModel
 import com.example.myapplication.model.UserModel
 import com.example.myapplication.ui.home.HomeViewModel
@@ -32,6 +33,7 @@ class UserProfileFragment : Fragment() {
     private val followersList: ArrayList<String> = ArrayList()
     private val followingList: ArrayList<String> = ArrayList()
     val user = Firebase.auth.currentUser!!.uid
+    val args: UserProfileFragmentArgs by navArgs()
     private var clickedUserId: String? = null
     var incomingUserData: UserModel? = null
 
@@ -80,13 +82,17 @@ class UserProfileFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        arguments?.let {
-            incomingUserData = it.getParcelable("clickedUserId")
-            if (incomingUserData != null) {
-                getUsersData(incomingUserData!!)
-                Log.d("salimmm", "translationtranslation ${incomingUserData?.followersArray?.size}")
-            }
-        }
+        incomingUserData = args.searchData
+        incomingUserData?.let { getUsersData(it) }
+
+        Log.d("salimmm", "translationtranslation ${incomingUserData?.followersArray?.size}")
+//        arguments?.let {
+//            incomingUserData = it.parcelable("clickedUserId")
+//            if (incomingUserData != null) {
+//                getUsersData(incomingUserData!!)
+//                Log.d("salimmm", "translationtranslation ${incomingUserData?.followersArray?.size}")
+//            }
+//        }
         getPostData(user)
         getFollowers()
         getFollowing()

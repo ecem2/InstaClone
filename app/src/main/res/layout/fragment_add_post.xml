@@ -35,10 +35,11 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgClose"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_marginStart="15dp"
                     android:src="@drawable/ic_exit"
+                    android:padding="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

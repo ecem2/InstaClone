@@ -94,6 +94,7 @@
             android:layout_marginRight="15dp"
             android:src="@drawable/ic_insta_story_exit"
             app:tint="@color/white"
+            android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -128,7 +129,7 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editTextStory"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/oval_edittext"
             android:layout_marginEnd="20dp"
@@ -144,8 +145,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/storyLikeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginRight="20dp"
             android:src="@drawable/ic_insta_story_send"
             app:layout_constraintBottom_toBottomOf="parent"

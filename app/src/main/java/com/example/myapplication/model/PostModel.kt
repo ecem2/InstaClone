@@ -17,7 +17,7 @@ data class PostModel(
     @SerializedName(value = "likeArray")
     val likeArray: ArrayList<String>? = null,
     @SerializedName(value = "postId")
-    val postId: String? = null,
-    @SerializedName(value = "comments")
-    var comments: ArrayList<Comment>? = null
+    val postId: String? = null
+//    @SerializedName(value = "comments")
+//    var comments: ArrayList<Comment>? = null
 ): Parcelable

@@ -82,15 +82,16 @@ class UserProfilePostFragment : Fragment() {
         database.orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (snapshot in dataSnapshot.children) {
+
                         if (snapshot.exists()) {
                             val post: PostModel? = snapshot.getValue(PostModel::class.java)
-                            val photoUrl = snapshot.getValue(PostModel::class.java)!!.postPhoto
-
-                            if (post?.userId.toString() == userUUID) {
-                                if (!postsData.contains(photoUrl.toString())) {
-                                    postsData.add(photoUrl?.first().toString())
+                        //    Log.d("ecemmm", "post $post")
+                            if (post?.userId == clickedUserId){
+                                if (post?.postPhoto?.isNotEmpty() == true) {
+                                    postsData.add(post.postPhoto[0])
                                     postsData.reverse()
                                 }
+
                             }
                         }
                     }

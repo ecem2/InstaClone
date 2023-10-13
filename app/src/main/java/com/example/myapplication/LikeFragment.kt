@@ -56,10 +56,10 @@ class LikeFragment : Fragment() {
             findNavController().popBackStack()
         }
         arguments?.let {
-            val translation = it.parcelable<PostModel>("clickedPost")
-            if (translation != null) {
-                getLikeData(translation.postId.toString())
-                Log.d("SALIMM", "translationtranslation ${translation}")
+            val postModel = it.parcelable<PostModel>("clickedPost")
+            if (postModel != null) {
+                getLikeData(postModel)
+                Log.d("SALIMM", "translationtranslation ${postModel}")
             }
         }
     }
@@ -80,26 +80,16 @@ class LikeFragment : Fragment() {
     }
 
 
-    private fun getLikeData(postId: String) {
+    private fun getLikeData(postModel: PostModel) {
         val userIdList: ArrayList<String> = ArrayList()
-        databaseReference.child("Posts").child(postId).child("likeArray")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (dataSnapshot in snapshot.children) {
-                        val like = dataSnapshot.getValue(String::class.java)
-                        if (like != null) {
-                            userIdList.add(like)
-                        }
-                    }
 
-                    Log.d("salimm", "USER IDS ${userIdList}")
-                    getUsers(userIdList)
-                }
+        if (postModel.likeArray?.isNotEmpty() == true) {
+            postModel.likeArray.forEach {
+                userIdList.add(it)
+            }
+        }
 
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-            })
+        getUsers(userIdList)
     }
 
     private fun getUsers(userList: ArrayList<String>) {
@@ -118,13 +108,14 @@ class LikeFragment : Fragment() {
                     }
                 }
 
-                likeData?.let { likeAdapter?.submitLikeList(it) }
+                Log.e("salimmm", "likeData $likeData")
+
+                likeData.let { likeAdapter?.submitLikeList(it) }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("salimmm", "getUsers ${error.message}")
             }
-
         })
     }
 }

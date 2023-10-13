@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -22,10 +23,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
 
-
 class ItemListAdapter(
     val context: Context,
-    // TODO INTERFACELER BURAYA
     private val onLikeCountListener: OnLikeCountListener,
     private val onLikeClickListener: OnLikeClickListener,
     private val onCommentClickListener: OnCommentClickListener,
@@ -66,6 +65,7 @@ class ItemListAdapter(
         Log.d("Ecco", "${postList.size}")
         if (postList.isNotEmpty() && !postList.isNullOrEmpty()) {
             checkLikeState(holder, postItem)
+            checkLikeCount(holder, postItem)
             var userItem: UserModel? = null
            // var commentItem: CommentData? = null
 
@@ -75,24 +75,10 @@ class ItemListAdapter(
                 }
             }
 
+
             userItem?.let { holder.bindItems(postItem, it) }
-
-            val likeCount = holder.itemView.findViewById<AppCompatTextView>(R.id.likeCount)
-
-            if (postItem.likeArray != null) {
-                likeCount.text =
-                    context.getString(R.string.like_count)
-                        .format(postItem.likeArray.size.toString())
-                likeCount.visibility = View.VISIBLE
-            } else {
-                likeCount.visibility = View.GONE
-            }
-            val commentView = holder.itemView.findViewById<ImageView>(R.id.commentButton)
-            commentView.setOnClickListener {
-                onCommentClickListener.onClick(postItem)
-            }
-            val userNickname = holder.itemView.findViewById<TextView>(R.id.userNickname)
-            userNickname.setOnClickListener {
+            val nicknameLL = holder.itemView.findViewById<LinearLayoutCompat>(R.id.nicknamePP)
+            nicknameLL.setOnClickListener {
                 if (userItem != null) {
                     onNickNameClickListener.onClick(userItem)
                 }
@@ -101,49 +87,41 @@ class ItemListAdapter(
             timestamp.text = postItem.timestamp?.let { TimeAgo.getTimeAgo(it.toLong()) }
             val homeCommentCount = holder.itemView.findViewById<TextView>(R.id.commentCount)
 //            commentItem?.comments = commentsList
-            val comments = postItem?.comments
-            val commentCount = comments?.size ?: 0
-            Log.d("CommentCount", "$commentCount")
+           // val comments = postItem?.comments
+           // val commentCount = comments?.size ?: 0
+          //  Log.d("CommentCount", "$commentCount")
 
-            if (commentCount > 0) {
-                homeCommentCount.text = context.getString(R.string.comment_count).format(commentCount.toString())
-                homeCommentCount.visibility = View.VISIBLE
-            } else {
-                homeCommentCount.visibility = View.GONE
-            }
+//            if (commentCount > 0) {
+//                homeCommentCount.text = context.getString(R.string.comment_count).format(commentCount.toString())
+//                homeCommentCount.visibility = View.VISIBLE
+//            } else {
+//                homeCommentCount.visibility = View.GONE
+//            }
             homeCommentCount?.setOnClickListener {
                 if (postItem != null) {
                     onCommentCountClickListener.onClick(postItem)
                 }
             }
 
-            val likeImageView = holder.itemView.findViewById<ImageView>(R.id.likeButton)
-            likeCount.setOnClickListener {
-                onLikeCountListener.onClick(postItem)
+
+
+            val commentView = holder.itemView.findViewById<ImageView>(R.id.commentButton)
+            commentView.setOnClickListener {
+                onCommentClickListener.onClick(postItem)
             }
-            likeImageView.setOnClickListener {
-                onLikeClickListener.onClick(postItem)
-                likePost(postItem, holder)
-            }
+
+
         }
     }
-//    private fun getCommentCount(holder: ItemListViewHolder, postId: String) {
-//
-//        val commentsRef = databaseReference.child("Posts").child(postId).child("comments")
-//        val homeCommentCount = holder.itemView.findViewById<TextView>(R.id.homeCommentText)
-//
-//        commentsRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val commentCount = snapshot.childrenCount
-//                homeCommentCount?.text = "Comment Count: $commentCount"
-//                homeCommentCount.visibility = View.VISIBLE
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // İşlem iptal edildiğinde yapılacak işlemler
-//            }
-//        })
-//    }
+    fun addCommentToPost(postId: String, commentList: Comment) {
+        val commentsRef = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("commentList")
+        val commentKey = commentsRef.push().key
+
+        commentKey?.let {
+            commentsRef.child(it).setValue(commentList)
+        }
+    }
+
     private fun checkLikeState(holder: ItemListViewHolder, postItem: PostModel) {
         val likeImageView = holder.itemView.findViewById<ImageView>(R.id.likeButton)
 
@@ -157,13 +135,33 @@ class ItemListAdapter(
                 .load(R.drawable.ic_insta_post_like)
                 .into(likeImageView)
         }
+
+        likeImageView.setOnClickListener {
+            onLikeClickListener.onClick(postItem)
+            //likePost(postItem, holder)
+        }
+    }
+
+    private fun checkLikeCount(holder: ItemListViewHolder, postItem: PostModel){
+        val likeCount = holder.itemView.findViewById<TextView>(R.id.likeCount)
+        if (postItem.likeArray != null) {
+            likeCount.text =
+                context.getString(R.string.like_count)
+                    .format(postItem.likeArray.size.toString())
+            likeCount.visibility = View.VISIBLE
+        } else {
+            likeCount.visibility = View.GONE
+        }
+        likeCount.setOnClickListener {
+            onLikeCountListener.onClick(postItem)
+        }
+
     }
 
 
     private fun likePost(postItem: PostModel, holder: ItemListViewHolder) {
         val likeButton = holder.itemView.findViewById<ImageView>(R.id.likeButton)
 
-        // Kullanıcının UID'sini beğenme listesine ekleyin veya çıkarın
         val userLiked = postItem.likeArray?.contains(firebaseUser.uid) == true
         if (userLiked) {
             postItem.likeArray?.remove(firebaseUser.uid)
@@ -185,9 +183,8 @@ class ItemListAdapter(
                 .load(R.drawable.ic_insta_red_like)
                 .into(likeButton)
         }
+
     }
-
-
     fun submitPostsList(posts: ArrayList<PostModel>) {
         postList.addAll(posts)
         notifyDataSetChanged()
@@ -218,7 +215,7 @@ class ItemListAdapter(
     class OnCommentCountClickListener(val clickListener: (postModel: PostModel) -> Unit) {
         fun onClick(postModel: PostModel) = clickListener(postModel)
     }
-    class OnNickNameClickListener(val clickListener: (userModel: UserModel) -> Unit) {
+      class OnNickNameClickListener(val clickListener: (userModel: UserModel) -> Unit) {
         fun onClick(userModel: UserModel) = clickListener(userModel)
     }
 
@@ -229,6 +226,7 @@ class ItemListAdapter(
                 val postImageView: AppCompatImageView = itemView.findViewById(R.id.postPhoto)
                 val profilePhoto: CircleImageView = itemView.findViewById(R.id.profilePhoto)
                 val nickName: AppCompatTextView = itemView.findViewById(R.id.userNickname)
+                val nicknameLL: LinearLayoutCompat = itemView.findViewById(R.id.nicknamePP)
 
 
                 nickName.text = userModel.userName

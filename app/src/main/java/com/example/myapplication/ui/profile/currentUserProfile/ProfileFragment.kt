@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentProfileBinding
@@ -17,6 +18,7 @@ import com.example.myapplication.model.ProfileModel
 import com.example.myapplication.model.UserModel
 import com.example.myapplication.ui.adapter.ProfileVpAdapter
 import com.example.myapplication.ui.login.LoginActivity
+import com.example.myapplication.ui.users.UserProfileFragmentArgs
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -49,7 +51,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = Firebase.auth.currentUser!!.uid
-        Log.d("ecemmm", "user ==$user")
+       // Log.d("ecemmm", "user ==$user")
         getFollowerCount(user)
         getFollowingCount(user)
         getUsersData(user)
@@ -85,7 +87,7 @@ class ProfileFragment : Fragment() {
                 override fun onDataChange(snapshotUser: DataSnapshot) {
                     if (snapshotUser.exists()) {
                         val profileData = snapshotUser.getValue(UserModel::class.java)
-                        Log.d("ecemmm", "ALL DATA $profileData")
+                    //    Log.d("ecemmm", "ALL DATA $profileData")
 
 
                         val profilePhoto = profileData?.profilePhoto
@@ -161,7 +163,7 @@ class ProfileFragment : Fragment() {
         })
     }
     private fun getPostData(userId: String) {
-        database.child("Posts").child(userId)
+        database.child("Posts")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (snap in snapshot.children) {

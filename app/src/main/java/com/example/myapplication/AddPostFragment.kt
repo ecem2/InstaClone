@@ -119,22 +119,6 @@ class AddPostFragment : Fragment() {
         }
     }
 
-    companion object {
-        fun newInstance(selectedImage: String): AddPostNextFragment {
-            val fragment = AddPostNextFragment()
-            val args = Bundle()
-            args.putString("selectedImage", selectedImage)
-            fragment.arguments = args
-            return fragment
-        }
-        fun showAppSettings(context: Context) {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", context.packageName, null)
-            intent.data = uri
-            context.startActivity(intent)
-        }
-    }
-
     private fun askPermissionForApi33() {
         isMediaGranted = ContextCompat.checkSelfPermission(
             requireContext(),

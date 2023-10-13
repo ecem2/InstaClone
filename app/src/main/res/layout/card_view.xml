@@ -16,41 +16,45 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp">
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/nicknamePP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/threePoint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/postPhoto">
+
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePhoto"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            app:civ_border_color="#FF000000"
-            app:layout_constraintEnd_toStartOf="@+id/userNickname"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_insta_back"
+            app:civ_border_color="#FF000000" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/userNickname"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_bold"
-            android:gravity="center|start"
+            android:gravity="center"
+            android:layout_marginStart="5dp"
             android:textSize="13sp"
             android:text="ecemcig"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/profilePhoto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/profilePhoto"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            android:textColor="@color/black" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/threePoint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="23dp"
             android:src="@drawable/three"
-            app:layout_constraintBottom_toBottomOf="@+id/userNickname"
+            app:layout_constraintBottom_toBottomOf="@+id/nicknamePP"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/userNickname" />
+            app:layout_constraintTop_toTopOf="@+id/nicknamePP" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/postPhoto"
@@ -61,7 +65,7 @@
             app:layout_constraintBottom_toTopOf="@+id/buttonsSection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePhoto" />
+            app:layout_constraintTop_toBottomOf="@+id/nicknamePP" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

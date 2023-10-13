@@ -11,9 +11,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/backButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_left_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_insta_back"
+        android:padding="8dp"
         android:layout_marginStart="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/newMessageLL"
         app:layout_constraintStart_toStartOf="parent"

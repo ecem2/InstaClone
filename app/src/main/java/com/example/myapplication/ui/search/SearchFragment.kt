@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,11 +57,14 @@ class SearchFragment : Fragment() {
             requireContext(),
             searchData!!,
             SearchAdapter.OnClickListener { searchItem ->
-                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                with (sharedPref.edit()) {
-                    putString("clickedUserId", searchItem.userId)
-                    apply()
-                }
+//                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+//                Log.d("ecemmm", "search ${searchItem}")
+//                with(sharedPref.edit()) {
+//                    putString("clickedUserId", searchItem)
+//                    apply()
+//                }
+
+
 
                 val action =
                     SearchFragmentDirections.actionSearchFragmentToUserProfileFragment(searchItem)

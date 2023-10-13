@@ -8,12 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.*
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentHomeBinding
+import com.example.myapplication.extension.Resource
+import com.example.myapplication.extension.Status
 import com.example.myapplication.model.UserModel
+import com.example.myapplication.repositories.PostsDataRepositoryInterface
 import com.example.myapplication.ui.adapter.ItemListAdapter
 import com.example.myapplication.ui.adapter.StoryAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,6 +27,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -31,7 +38,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     var searchData: ArrayList<UserModel>? = ArrayList()
-    val viewModel: HomeViewModel by viewModels()
+
+//    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
     var storyData: ArrayList<UserModel>? = ArrayList()
     val user = Firebase.auth.currentUser!!.uid
     val currentUserStory = UserModel()
@@ -44,7 +53,6 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val view = binding.root
-
         database = Firebase.database.reference
         postReference = database.child("Posts")
         setupRecyclerView()
@@ -59,14 +67,13 @@ class HomeFragment : Fragment() {
             requireContext(),
 
             ItemListAdapter.OnLikeCountListener { likeItem ->
-                Log.d("Ecemmm", "AAAAAA  $likeItem")
+               // Log.d("Ecemmm", "AAAAAA  $likeItem")
                 val bundle = Bundle()
                 bundle.putParcelable("clickedPost", likeItem)
                 findNavController().navigate(R.id.likeFragment, bundle)
             },
 
             ItemListAdapter.OnLikeClickListener { likeItem ->
-
 
             },
             ItemListAdapter.OnCommentClickListener { commentItem ->
@@ -80,11 +87,20 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.commentFragment, bundle)
 
             },
-            ItemListAdapter.OnNickNameClickListener { textItem ->
-                Log.d("salimmm", "textItem ${textItem}")
-                val bundle = Bundle()
-                bundle.putParcelable("clickedUserId", textItem)
-                findNavController().navigate(R.id.userProfileFragment, bundle)
+            ItemListAdapter.OnNickNameClickListener { clickedUserModel ->
+                Log.d("ecemm", "textItem $clickedUserModel")
+//                Log.d("salimmm", "textItem ${textItem}")
+//                val bundle = Bundle()
+//                bundle.putParcelable("clickedUserId", textItem)
+
+                if(clickedUserModel.userId == user ){
+                    findNavController().navigate(HomePageFragmentDirections.actionHomePageFragmentToViewpagerNav())
+
+
+                }else{
+                    findNavController().navigate(HomePageFragmentDirections.actionHomePageFragmentToUserProfileFragment(clickedUserModel))
+                }
+//                findNavController().navigate(R.id.userProfileFragment, bundle)
             }
         )
         binding.postRV.apply {
@@ -115,7 +131,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getPostData()
+//        lifecycleScope.launch {
+//            viewModel.getPostData()
+//        }
         getPostData()
         viewModel.getUsersData()
         getUsersData()
@@ -134,8 +152,28 @@ class HomeFragment : Fragment() {
 
 
     private fun getPostData() {
-        viewModel.postsData.observe(viewLifecycleOwner) { postArrayList ->
-            postAdapter.submitPostsList(postArrayList)
+        viewModel.fetchAllPostsData.observe(viewLifecycleOwner) { postArrayList ->
+            when (postArrayList.status) {
+                Status.SUCCESS -> {
+                    binding.tvError.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.postRV.visibility = View.VISIBLE
+                    postArrayList.data?.let { postAdapter.submitPostsList(it) }
+                }
+
+                Status.LOADING -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.postRV.visibility = View.GONE
+                    binding.tvError.visibility = View.GONE
+                }
+
+                Status.ERROR -> {
+                    binding.postRV.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.tvError.visibility = View.VISIBLE
+                    binding.tvError.text = postArrayList.message
+                }
+            }
         }
     }
 
@@ -147,9 +185,24 @@ class HomeFragment : Fragment() {
 
     private fun getStoryData() {
         viewModel.storyData.observe(viewLifecycleOwner) { storyArrayList ->
-            storyAdapter.submitStoryList(storyArrayList)
+            val userProfilePhoto = Firebase.auth.currentUser?.photoUrl.toString()
+            val userName = Firebase.auth.currentUser?.displayName
 
+            val userIndex = UserModel(
+                userId = Firebase.auth.currentUser!!.uid,
+                userNickName = userName,
+                profilePhoto = userProfilePhoto
+            )
+            if (storyArrayList.isEmpty()) {
+                storyArrayList.add(0, userIndex)
+            } else {
+                storyArrayList.add(0, userIndex)
+            }
+
+            storyAdapter.submitStoryList(storyArrayList)
         }
     }
+
 }
+
 

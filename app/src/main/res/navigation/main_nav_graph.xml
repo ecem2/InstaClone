@@ -5,11 +5,21 @@
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/homePageFragment">
 
+
+    <include app:graph="@navigation/viewpager_nav" />
+
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.myapplication.HomePageFragment"
         android:label="fragment_home_page"
         tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePageFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_viewpager_nav"
+            app:destination="@id/viewpager_nav" />
+
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -25,9 +35,7 @@
         <action
             android:id="@+id/action_homeFragment_to_likeFragment"
             app:destination="@id/likeFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/postAddFragment"
