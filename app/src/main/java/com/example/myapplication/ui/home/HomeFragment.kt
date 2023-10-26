@@ -67,7 +67,6 @@ class HomeFragment : Fragment() {
             requireContext(),
 
             ItemListAdapter.OnLikeCountListener { likeItem ->
-               // Log.d("Ecemmm", "AAAAAA  $likeItem")
                 val bundle = Bundle()
                 bundle.putParcelable("clickedPost", likeItem)
                 findNavController().navigate(R.id.likeFragment, bundle)
@@ -185,24 +184,38 @@ class HomeFragment : Fragment() {
 
     private fun getStoryData() {
         viewModel.storyData.observe(viewLifecycleOwner) { storyArrayList ->
-            val userProfilePhoto = Firebase.auth.currentUser?.photoUrl.toString()
-            val userName = Firebase.auth.currentUser?.displayName
+            val user = Firebase.auth.currentUser!!.uid
 
-            val userIndex = UserModel(
-                userId = Firebase.auth.currentUser!!.uid,
-                userNickName = userName,
-                profilePhoto = userProfilePhoto
-            )
-            if (storyArrayList.isEmpty()) {
-                storyArrayList.add(0, userIndex)
-            } else {
-                storyArrayList.add(0, userIndex)
-            }
+            val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(user)
 
-            storyAdapter.submitStoryList(storyArrayList)
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val userSnapshot = dataSnapshot.getValue(UserModel::class.java)
+                        val userProfilePhoto = userSnapshot?.profilePhoto
+                        val userName = userSnapshot?.userNickName
+
+                        val currentUser = UserModel(
+                            userId = user,
+                            userNickName = userName,
+                            profilePhoto = userProfilePhoto
+                        )
+
+                        if (storyArrayList.isEmpty()) {
+                            storyArrayList.add(0, currentUser)
+                        } else {
+                            storyArrayList.add(0, currentUser)
+                        }
+
+                        storyAdapter.submitStoryList(storyArrayList)
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
         }
     }
-
 }
 
 

@@ -21,6 +21,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/commentConstraint"
             android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
             android:layout_height="30dp">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -105,15 +106,15 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/commentEditText"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="10dp"
             app:flow_horizontalAlign="center"
             app:flow_verticalAlign="center"
             android:padding="7dp"
             android:background="@drawable/oval_edittext"
-            android:ems="12"
+            android:ems="13"
             android:textColor="@color/gray"
             android:fontFamily="@font/sf_pro_text_regular"
             android:paddingStart="10dp"
@@ -122,23 +123,34 @@
             app:layout_constraintEnd_toStartOf="@+id/commentSend"
             app:layout_constraintHorizontal_bias="0.611"
             app:layout_constraintStart_toEndOf="@+id/commentProfilePhoto" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/commentSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="10dp"
-            android:text="Send"
-            android:fontFamily="@font/sf_pro_text_bold"
-            android:textColor="@color/black"
-            android:textAllCaps="false"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/commentEditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/commentEditText"
-            app:layout_constraintTop_toTopOf="@+id/commentEditText" />
+<androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/commentSend"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="7dp"
+    android:layout_marginBottom="10dp"
+    android:src="@drawable/ic_insta_post_share"
+    app:layout_constraintBottom_toBottomOf="@+id/commentEditText"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/commentEditText"
+    app:layout_constraintTop_toTopOf="@+id/commentEditText" />
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:id="@+id/commentSend"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            android:layout_marginTop="7dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:text="Send"-->
+<!--            android:fontFamily="@font/sf_pro_text_bold"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textSize="15sp"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/commentEditText"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/commentEditText"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/commentEditText" />-->
 
         <View
             android:id="@+id/shadowBottom"

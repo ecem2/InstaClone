@@ -29,9 +29,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePhoto"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_gravity="center"
+            android:layout_marginStart="5dp"
             android:src="@drawable/ic_insta_back"
             app:civ_border_color="#FF000000" />
 
@@ -41,7 +42,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_bold"
             android:gravity="center"
-            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="7dp"
             android:textSize="13sp"
             android:text="ecemcig"
             android:textColor="@color/black" />
@@ -155,9 +157,11 @@
                 android:textSize="12sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                tools:text="likes" />
+                tools:text="likes"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/commentNicknameLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

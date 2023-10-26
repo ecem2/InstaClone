@@ -57,18 +57,16 @@ class SearchFragment : Fragment() {
             requireContext(),
             searchData!!,
             SearchAdapter.OnClickListener { searchItem ->
-//                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-//                Log.d("ecemmm", "search ${searchItem}")
-//                with(sharedPref.edit()) {
-//                    putString("clickedUserId", searchItem)
-//                    apply()
-//                }
-
-
-
-                val action =
-                    SearchFragmentDirections.actionSearchFragmentToUserProfileFragment(searchItem)
+                // Tıklanan kullanıcının ID'sini paylaş
+                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putString("clickedUserId", searchItem.userId)
+                    apply()
+                }
+                // UserProfileFragment'a git
+                val action = SearchFragmentDirections.actionSearchFragmentToUserProfileFragment(searchItem)
                 findNavController().navigate(action)
+
             })
 
         binding.searchRV.apply {
@@ -87,21 +85,17 @@ class SearchFragment : Fragment() {
 
 
         binding.searchView.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (binding.searchView.text.toString() == "") {
-                    binding.searchRV.visibility = View.GONE
+                searchData?.clear()
 
-                    searchData?.clear()
-                } else {
+                if (binding.searchView.text.toString().isNotBlank()) {
                     binding.searchRV.visibility = View.VISIBLE
 
                     database.child("Users")
                         .orderByChild("userNickName")
-                            .startAt(s.toString().lowercase())
+                        .startAt(s.toString().lowercase())
                         .endAt(s.toString().lowercase() + "\uf8ff")
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshotUser: DataSnapshot) {
@@ -112,19 +106,16 @@ class SearchFragment : Fragment() {
                                     }
                                 }
                                 searchData?.let { searchAdapter.submitSearchList(it) }
-
                             }
 
-                            override fun onCancelled(error: DatabaseError) {
-
-                            }
+                            override fun onCancelled(error: DatabaseError) {}
                         })
+                } else {
+                    binding.searchRV.visibility = View.GONE
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 }

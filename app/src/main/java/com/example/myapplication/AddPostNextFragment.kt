@@ -1,11 +1,7 @@
 package com.example.myapplication
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
-import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentAddPostNextBinding
+import com.example.myapplication.extension.hideKeyboard
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +25,6 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 
-// https://www.youtube.com/watch?v=S-7H72UTiBU&ab_channel=ProgrammingHut -- camera icin
 class AddPostNextFragment : Fragment() {
 
     private lateinit var binding: FragmentAddPostNextBinding
@@ -53,24 +49,22 @@ class AddPostNextFragment : Fragment() {
         storagePostPicRef = FirebaseStorage.getInstance().reference.child("PostPhoto")
         databaseReference = Firebase.database.reference.child("Posts")
         currentUserUid = firebaseAuth.currentUser!!.uid
-
-        getSelectedUserData()
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("Eccco", "$selectedImage")
-        Glide.with(requireContext()).load(selectedImage[0]).into(binding.ivPostImage)
+        getSelectedUserData()
 
         binding.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
         binding.btnShare.setOnClickListener {
+            hideKeyboard()
+            binding.llProgress.visibility = View.VISIBLE
             uploadImage()
         }
+
     }
 
     private fun addDataToFirebase(
@@ -80,7 +74,6 @@ class AddPostNextFragment : Fragment() {
         timestamp: String,
         postUid: String
     ) {
-        binding.progressBar.visibility = View.VISIBLE
         val newPost: HashMap<String, Any> = HashMap()
         newPost["userId"] = userUid
         newPost["postPhoto"] = postPhoto
@@ -90,19 +83,16 @@ class AddPostNextFragment : Fragment() {
 
         databaseReference.child(postUid).updateChildren(newPost).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("Ecccoo", "SUCCESSFUL === ${task.isSuccessful}")
-                binding.progressBar.visibility = View.GONE
+                binding.llProgress.visibility = View.GONE
                 navigateToHome()
             } else {
-                Log.d("Ecccoo", "ERROR")
-                binding.progressBar.visibility = View.GONE
+                binding.llProgress.visibility = View.GONE
                 Toast.makeText(requireContext(), "Post could not load", Toast.LENGTH_SHORT).show()
             }
 
         }.addOnFailureListener { exception ->
             Toast.makeText(requireContext(), exception.localizedMessage, Toast.LENGTH_SHORT).show()
-            binding.progressBar.visibility = View.GONE
-            Log.d("Ecccoo", "FAILURE === ${exception.message}")
+            binding.llProgress.visibility = View.GONE
         }
     }
 
@@ -113,75 +103,45 @@ class AddPostNextFragment : Fragment() {
 
     private fun getSelectedUserData() {
         selectedImage.add(addPostArgs.selectedImage.toUri())
+        Glide.with(requireContext()).load(selectedImage[0]).into(binding.ivPostImage)
     }
 
     private fun uploadImage() {
-        if (TextUtils.isEmpty(binding.etPhotoInfo.text.toString())) {
-            Toast.makeText(requireContext(), "Please write description", Toast.LENGTH_SHORT).show()
-        } else {
-            val fileRef = storagePostPicRef!!.child(System.currentTimeMillis().toString() + ".jpg")
-            var uploadTask: StorageTask<*>
-            uploadTask = fileRef.putFile(selectedImage[0])
-            uploadTask.continueWithTask(Continuation <UploadTask.TaskSnapshot, Task<Uri>> { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        Log.e("salimmmFirebase", "errorrr ${it.localizedMessage}")
-                        throw it
-                    }
+        val fileRef = storagePostPicRef!!.child(System.currentTimeMillis().toString() + ".jpg")
+        var uploadTask: StorageTask<*>
+        uploadTask = fileRef.putFile(selectedImage[0])
+        uploadTask.continueWithTask(Continuation <UploadTask.TaskSnapshot, Task<Uri>> { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    Log.e(TAG, "errorrr ${it.localizedMessage}")
+                    throw it
                 }
-                return@Continuation fileRef.downloadUrl
-            }).addOnSuccessListener {
-                storagePostPicRef!!.downloadUrl.addOnSuccessListener {
-                    myUrl = it.toString()
-                    urlList.add(myUrl)
-                    Log.e("salimmmFirebase", "download passed")
-
-                    val ref = FirebaseDatabase.getInstance().reference.child("Posts")
-                    val postId = ref.push().key
-
-                    addDataToFirebase(
-                        currentUserUid,
-                        urlList,
-                        photoInfo,
-                        timestamp,
-                        postId.toString()
-                    )
-                }
+            } else {
+                Log.e(TAG, "NO ERROR")
             }
+            fileRef.downloadUrl
+        }).addOnSuccessListener { photoUri->
+            myUrl = photoUri.toString()
+            urlList.add(myUrl)
+            Log.e(TAG, "download passed")
 
+            val ref = FirebaseDatabase.getInstance().reference.child("Posts")
+            val postId = ref.push().key
+            photoInfo = binding.etPhotoInfo.text.toString()
+            timestamp = System.currentTimeMillis().toString()
 
-//                val fileRef = storagePostPicRef!!.child(System.currentTimeMillis().toString() + ".jpg")
-//                var uploadTask: StorageTask<*>
-//                uploadTask = fileRef.putFile(selectedImage[0].toUri())
-//                uploadTask.continueWithTask(Continuation <UploadTask.TaskSnapshot, Task<Uri>> { task ->
-//                    if (!task.isSuccessful) {
-//                        task.exception?.let {
-//                            throw it
-//                        }
-//                    }
-//                    return@Continuation fileRef.downloadUrl
-//                }).addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        val downloadUrl = task.result
-//                        myUrl = downloadUrl.toString()
-//
-//                        val ref = FirebaseDatabase.getInstance().reference.child("Posts")
-//                        val postId = ref.push().key
-//
-//                        addDataToFirebase(
-//                            currentUserUid,
-//                            selectedImage,
-//                            photoInfo,
-//                            timestamp,
-//                            postId.toString()
-//                        )
-//                    }
-//                }
+            addDataToFirebase(
+                currentUserUid,
+                urlList,
+                photoInfo,
+                timestamp,
+                postId.toString()
+            )
         }
     }
 
     companion object {
-        private const val TAG = "AddPostNextFragment"
+        private const val TAG = "ecemmmAddPostNextFragment"
 
     }
 }

@@ -2,6 +2,7 @@ package com.example.myapplication.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -93,6 +94,11 @@ class StoryAdapter(
 
 
             binding.storyNickname.text = userModel?.userNickName
+            if (userModel?.userStory?.isNotEmpty() == true) {
+                binding.storyColor.visibility = View.VISIBLE
+            } else {
+                binding.storyColor.visibility = View.GONE
+            }
         }
     }
     class OnClickListener(val clickListener: (userModel: UserModel) -> Unit) {

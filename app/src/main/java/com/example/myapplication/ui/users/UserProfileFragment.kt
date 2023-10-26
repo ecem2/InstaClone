@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.users
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -81,7 +82,11 @@ class UserProfileFragment : Fragment() {
         binding.profileBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        clickedUserId = sharedPref.getString(
+            "clickedUserId",
+            ""
+        )
         incomingUserData = args.searchData
         incomingUserData?.let { getUsersData(it) }
 
@@ -93,7 +98,7 @@ class UserProfileFragment : Fragment() {
 //                Log.d("salimmm", "translationtranslation ${incomingUserData?.followersArray?.size}")
 //            }
 //        }
-        getPostData(user)
+        getPostSize(user)
         getFollowers()
         getFollowing()
 
@@ -251,28 +256,23 @@ class UserProfileFragment : Fragment() {
         Log.d("fatos", "FOLLOWERS COUNT ${userModel.followersArray?.size}")
     }
 
-    private fun getPostData(userId: String) {
-        database.child("Posts").child(userId)
+    private fun getPostSize(userId: String) {
+        database.child("Posts")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    postList.clear()
                     for (snap in snapshot.children) {
-                        val post = snapshot.getValue(PostModel::class.java)
-                        val photoUrl = snapshot.getValue(PostModel::class.java)!!.postPhoto
-                        if (post?.userId.toString() == userId) {
-                            postList.add(photoUrl.toString())
+                        val post = snap.getValue(PostModel::class.java)
+                        if (post?.userId == clickedUserId ) {
+                            postList.add(post.toString())
                         }
                     }
                     binding.postCountTitle.text = postList.size.toString()
-
                 }
-
-
                 override fun onCancelled(error: DatabaseError) {
-
                 }
             })
     }
-
     companion object {
         private const val TAG = "UserProfileFragment"
     }

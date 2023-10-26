@@ -194,8 +194,8 @@ class CommentFragment : Fragment() {
     }
     private fun publishComment(postId: String) {
 
-        val commentId = mRef.child("Posts").child(postId).child("comments").push().key.toString()
-        val commentRef = mRef.child("Posts").child(postId).child("comments")
+        val commentId = mRef.child("Posts").child(postId).child("commentList").push().key.toString()
+        val commentRef = mRef.child("Posts").child(postId).child("commentList")
 
         val commentMap = HashMap<String, Any>()
         commentMap["commentId"] = commentId // Include the commentId in the commentMap

@@ -56,7 +56,7 @@ class ProfileFragment : Fragment() {
         getFollowingCount(user)
         getUsersData(user)
         profileViewPager()
-        getPostData(user)
+        getPostSize(user)
         binding.settingsButton.setOnClickListener {
             showProfileBottomSheet()
         }
@@ -162,26 +162,22 @@ class ProfileFragment : Fragment() {
             }
         })
     }
-    private fun getPostData(userId: String) {
+    private fun getPostSize(userId: String) {
         database.child("Posts")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    postList.clear()
                     for (snap in snapshot.children) {
-                        val post = snapshot.getValue(PostModel::class.java)
-                        val photoUrl = snapshot.getValue(PostModel::class.java)!!.postPhoto
-                        if (post?.userId.toString() == userId) {
-                            postList?.add(photoUrl.toString())
+                        val post = snap.getValue(PostModel::class.java)
+                        if (post?.userId == userId) {
+                            postList.add(post.toString())
                         }
                     }
-                    binding.profilePostCountTitle.text = postList?.size.toString()
-
+                    binding.profilePostCountTitle.text = postList.size.toString()
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-
                 }
             })
     }
-
 
 }

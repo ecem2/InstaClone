@@ -55,30 +55,25 @@ class ProfilePostFragment : Fragment() {
         database.orderByChild("timestamp").addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                postsData.clear()
+
                 for (snapshot in dataSnapshot.children) {
                     if (snapshot.exists()) {
                         val post: PostModel? = snapshot.getValue(PostModel::class.java)
                         if (post != null && post.userId == userUUID) {
                             val photoUrl = post.postPhoto
-                            photoUrl?.reverse()
-
-//                            if (post.userId.toString() == userUUID) {
-//                                if (!postsData.contains(photoUrl.toString())) {
-//                                    postsData.add(photoUrl?.first().toString())
-//                                    postsData.reverse()
-//                                }
-//                            }
+                            photoUrl?.let {
+                                postsData.add(it.toString())
+                            }
                         }
                     }
                 }
-                  Log.d("Fatooosss","$userUUID")
-                  usersAdapter.submitPostPhotoList(postsData)
+                postsData.reverse()
 
-                   Log.d("fatoss", "CURRENT USER DATA $postsData")
+                usersAdapter.submitPostPhotoList(postsData)
             }
 
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
     }

@@ -49,7 +49,7 @@ class UserProfilePostFragment : Fragment() {
         Log.d("fatoss", "clickedUserId11111 $clickedUserId")
 
 
-        clickedUserId?.let { getPostData(it) }
+       getPostData()
     }
 
     private fun setupRecyclerView() {
@@ -77,33 +77,33 @@ class UserProfilePostFragment : Fragment() {
 //            }
 //        })
 //    }
+private fun getPostData() {
+    database.orderByChild("timestamp").addListenerForSingleValueEvent(object :
+        ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            postsData.clear()
 
-    private fun getPostData(userUUID: String) {
-        database.orderByChild("timestamp").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (snapshot in dataSnapshot.children) {
-
-                        if (snapshot.exists()) {
-                            val post: PostModel? = snapshot.getValue(PostModel::class.java)
-                        //    Log.d("ecemmm", "post $post")
-                            if (post?.userId == clickedUserId){
-                                if (post?.postPhoto?.isNotEmpty() == true) {
-                                    postsData.add(post.postPhoto[0])
-                                    postsData.reverse()
-                                }
-
-                            }
+            for (snapshot in dataSnapshot.children) {
+                if (snapshot.exists()) {
+                    Log.d("ecoo", "$snapshot")
+                    val post: PostModel? = snapshot.getValue(PostModel::class.java)
+                    Log.d("ecoo", "$post")
+                    if (post != null && post.userId == clickedUserId) {
+                        val photoUrl = post.postPhoto
+                        Log.d("ecoo", "$photoUrl")
+                        photoUrl?.let {
+                            postsData.add(it.toString())
                         }
                     }
-
-                    usersAdapter.submitPostPhotoList(postsData)
-
-                    Log.d("fatoss", "DATA $postsData")
                 }
+            }
+            postsData.reverse()
 
-                override fun onCancelled(error: DatabaseError) {
+            usersAdapter.submitPostPhotoList(postsData)
+        }
 
-                }
-            })
-    }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    })
+}
 }

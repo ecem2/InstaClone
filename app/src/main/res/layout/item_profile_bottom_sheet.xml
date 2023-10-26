@@ -21,6 +21,7 @@
             android:id="@+id/settingsLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -40,7 +41,7 @@
                 android:fontFamily="@font/sf_pro_text_bold"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -55,6 +56,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/activityLY"
             android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
             android:layout_height="50dp"
             android:orientation="horizontal">
 
@@ -73,7 +75,7 @@
                 android:text="Your activity"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -90,6 +92,7 @@
             android:id="@+id/archiveLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -108,7 +111,7 @@
                 android:textAllCaps="false"
                 android:fontFamily="@font/sf_pro_text_bold"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
@@ -124,6 +127,7 @@
             android:id="@+id/qrCodeLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -142,7 +146,7 @@
                 android:text="QR code"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -160,6 +164,7 @@
             android:id="@+id/savedLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -178,7 +183,7 @@
                 android:text="Saved"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -195,6 +200,7 @@
             android:id="@+id/closeFriendsLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -214,7 +220,7 @@
                 android:text="Close Friends"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -232,6 +238,7 @@
             android:id="@+id/favoritesLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -251,7 +258,7 @@
                 android:text="Favorites"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold"
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -269,6 +276,7 @@
             android:id="@+id/logOutLY"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -287,8 +295,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Log out"
                 android:textAllCaps="false"
-                android:textColor="@color/red"
-                android:textSize="18sp"
+                android:textColor="#7E1F21"
+                android:textSize="16sp"
                 android:fontFamily="@font/sf_pro_text_bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -121,8 +121,6 @@ class HomeViewModel(
         })
     }
 
-
-    // todo usttekinden de cekilebilir
     fun getStoryData() = viewModelScope.launch(Dispatchers.IO) {
         val storyList: ArrayList<UserModel> = ArrayList()
 

@@ -66,12 +66,38 @@ class ItemListAdapter(
         if (postList.isNotEmpty() && !postList.isNullOrEmpty()) {
             checkLikeState(holder, postItem)
             checkLikeCount(holder, postItem)
+            addCommentToPost(postItem, commentsList)
+            getCommentsForPost(postItem)
             var userItem: UserModel? = null
-           // var commentItem: CommentData? = null
+            //var commentItem: Comment? = null
 
             for (user in userList) {
                 if (user.userId == postItem.userId) {
                     userItem = user
+                }
+            }
+            val likeCount = holder.itemView.findViewById<AppCompatTextView>(R.id.likeCount)
+            val commentNicknameLL = holder.itemView.findViewById<LinearLayoutCompat>(R.id.commentNicknameLL)
+            val commentCount = holder.itemView.findViewById<AppCompatTextView>(R.id.commentCount)
+            val timestampTV = holder.itemView.findViewById<AppCompatTextView>(R.id.timestamp)
+
+            if (postItem.likeArray != null && postItem.likeArray.isNotEmpty()) {
+                likeCount.text = context.getString(R.string.like_count).format(postItem.likeArray.size.toString())
+                likeCount.visibility = View.VISIBLE
+                commentNicknameLL.visibility = View.GONE
+                commentCount.visibility = View.GONE
+                timestampTV.visibility = View.GONE
+            } else {
+                likeCount.visibility = View.GONE
+                if (!postItem.commentList.isNullOrEmpty()) {
+                    commentCount.text = context.getString(R.string.comment_count).format(postItem.commentList.size.toString())
+                    commentCount.visibility = View.VISIBLE
+                    commentNicknameLL.visibility = View.GONE
+                    timestampTV.visibility = View.GONE
+                } else {
+                    commentCount.visibility = View.GONE
+                    commentNicknameLL.visibility = View.VISIBLE
+                    timestampTV.visibility = View.VISIBLE
                 }
             }
 
@@ -113,15 +139,32 @@ class ItemListAdapter(
 
         }
     }
-    fun addCommentToPost(postId: String, commentList: Comment) {
-        val commentsRef = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("commentList")
+
+
+    fun addCommentToPost(postItem: PostModel, commentList: ArrayList<Comment>) {
+        val commentsRef = FirebaseDatabase.getInstance().getReference("Posts").child(postItem.postId.toString()).child("commentList")
         val commentKey = commentsRef.push().key
 
         commentKey?.let {
             commentsRef.child(it).setValue(commentList)
         }
     }
+    fun getCommentsForPost(postItem: PostModel) {
+        val commentsRef = FirebaseDatabase.getInstance().getReference("Posts").child(postItem.postId.toString()).child("commentList")
 
+        commentsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val comments = ArrayList<Comment>()
+                for (childSnapshot in dataSnapshot.children) {
+                    val commentData = childSnapshot.getValue(Comment::class.java)
+                    commentData?.let { comments.add(it) }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+    }
     private fun checkLikeState(holder: ItemListViewHolder, postItem: PostModel) {
         val likeImageView = holder.itemView.findViewById<ImageView>(R.id.likeButton)
 
@@ -138,7 +181,7 @@ class ItemListAdapter(
 
         likeImageView.setOnClickListener {
             onLikeClickListener.onClick(postItem)
-            //likePost(postItem, holder)
+            likePost(postItem, holder)
         }
     }
 
@@ -169,11 +212,9 @@ class ItemListAdapter(
             postItem.likeArray?.add(firebaseUser.uid)
         }
 
-        // Beğeni durumunu Firebase veritabanında güncelleyin
         val postRef = FirebaseDatabase.getInstance().getReference("Posts").child(postItem.postId.toString())
         postRef.child("likeArray").setValue(postItem.likeArray)
 
-        // Beğeni simgesini güncelleyin
         if (userLiked) {
             Glide.with(holder.itemView)
                 .load(R.drawable.ic_insta_post_like)
@@ -227,11 +268,21 @@ class ItemListAdapter(
                 val profilePhoto: CircleImageView = itemView.findViewById(R.id.profilePhoto)
                 val nickName: AppCompatTextView = itemView.findViewById(R.id.userNickname)
                 val nicknameLL: LinearLayoutCompat = itemView.findViewById(R.id.nicknamePP)
+                val commentNicknameLL: LinearLayoutCompat = itemView.findViewById(R.id.commentNicknameLL)
+                val photoInfo: AppCompatTextView = itemView.findViewById(R.id.userNicknameComment)
+                val commentNickname: AppCompatTextView = itemView.findViewById(R.id.userNicknameExplanation)
 
-
+                commentNickname.text = userModel.userNickName
                 nickName.text = userModel.userName
                 Glide.with(context).load(postModel.postPhoto?.first()).into(postImageView)
                 Glide.with(context).load(userModel.profilePhoto).into(profilePhoto)
+                if (postModel.photoInfo != null && !postModel.photoInfo.isEmpty()) {
+                    photoInfo.text = postModel.photoInfo
+                    commentNicknameLL.visibility = View.VISIBLE
+                } else {
+                    photoInfo.text = ""
+                    commentNicknameLL.visibility = View.GONE
+                }
             }
 
         }
