@@ -83,7 +83,6 @@ class SearchFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-
         binding.searchView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -106,6 +105,7 @@ class SearchFragment : Fragment() {
                                     }
                                 }
                                 searchData?.let { searchAdapter.submitSearchList(it) }
+
                             }
 
                             override fun onCancelled(error: DatabaseError) {}

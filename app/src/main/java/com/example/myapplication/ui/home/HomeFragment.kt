@@ -22,6 +22,7 @@ import com.example.myapplication.model.UserModel
 import com.example.myapplication.repositories.PostsDataRepositoryInterface
 import com.example.myapplication.ui.adapter.ItemListAdapter
 import com.example.myapplication.ui.adapter.StoryAdapter
+import com.example.myapplication.ui.camera.CameraFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     var searchData: ArrayList<UserModel>? = ArrayList()
-
+    private lateinit var selectedSize: String
 //    private val viewModel: HomeViewModel by viewModels()
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
     var storyData: ArrayList<UserModel>? = ArrayList()
@@ -79,6 +80,7 @@ class HomeFragment : Fragment() {
                 val bundle = Bundle()
                 bundle.putParcelable("clickedComment", commentItem)
                 findNavController().navigate(R.id.commentFragment, bundle)
+//                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCommentFragment(commentItem))
             },
             ItemListAdapter.OnCommentCountClickListener { commentItem ->
                 val bundle = Bundle()
@@ -86,20 +88,15 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.commentFragment, bundle)
 
             },
-            ItemListAdapter.OnNickNameClickListener { clickedUserModel ->
-                Log.d("ecemm", "textItem $clickedUserModel")
-//                Log.d("salimmm", "textItem ${textItem}")
-//                val bundle = Bundle()
-//                bundle.putParcelable("clickedUserId", textItem)
-
-                if(clickedUserModel.userId == user ){
-                    findNavController().navigate(HomePageFragmentDirections.actionHomePageFragmentToViewpagerNav())
-
-
-                }else{
-                    findNavController().navigate(HomePageFragmentDirections.actionHomePageFragmentToUserProfileFragment(clickedUserModel))
+            ItemListAdapter.OnNickNameClickListener { incomingUserData ->
+                val currentUser = Firebase.auth.currentUser
+                if (currentUser != null) {
+                    findNavController().navigate(R.id.profileFragment)
+                } else {
+                    val bundle = Bundle()
+                    bundle.putParcelable("clickedUserId", incomingUserData)
+                    findNavController().navigate(R.id.userProfileFragment, bundle)
                 }
-//                findNavController().navigate(R.id.userProfileFragment, bundle)
             }
         )
         binding.postRV.apply {
@@ -114,9 +111,17 @@ class HomeFragment : Fragment() {
             requireContext(),
             storyData!!,
             StoryAdapter.OnClickListener { storyItem ->
-                val bundle = Bundle()
-                bundle.putParcelable("clickedUserId", storyItem)
-                findNavController().navigate(R.id.storyClickFragment, bundle)
+                if (storyItem.userId == Firebase.auth.currentUser!!.uid) {
+                    val cameraFragment = CameraFragment()
+                    val fragmentTransaction = parentFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.home_fragment_container, cameraFragment)
+                    fragmentTransaction.addToBackStack(null)
+                    fragmentTransaction.commit()
+                } else {
+                    val bundle = Bundle()
+                    bundle.putParcelable("clickedUserId", storyItem)
+                    findNavController().navigate(R.id.storyClickFragment, bundle)
+                }
             })
 
         binding.storiesRecyclerView.apply {
@@ -126,6 +131,7 @@ class HomeFragment : Fragment() {
             setHasFixedSize(true)
         }
     }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -138,6 +144,7 @@ class HomeFragment : Fragment() {
         getUsersData()
         viewModel.getStoryData()
         getStoryData()
+        selectedSize = getString(R.string.size_one)
 
         binding.messengerButton.setOnClickListener {
             val messageFragment = MessageFragment()

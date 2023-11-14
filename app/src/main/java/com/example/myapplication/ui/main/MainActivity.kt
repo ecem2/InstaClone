@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
         private const val NOTIFICATION_REQUEST_CODE = 1234
         const val NOTIFICATION_ID = 101
+        const val KEY_EVENT_ACTION = "key_event_action"
+        const val KEY_EVENT_EXTRA = "key_event_extra"
+        private const val IMMERSIVE_FLAG_TIMEOUT = 500L
         const val CHANNEL_ID = "Canberk-odev"
     }
      @RequiresApi(Build.VERSION_CODES.O)

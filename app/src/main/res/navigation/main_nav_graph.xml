@@ -6,7 +6,6 @@
     app:startDestination="@id/homePageFragment">
 
 
-    <include app:graph="@navigation/viewpager_nav" />
 
     <fragment
         android:id="@+id/homePageFragment"
@@ -94,9 +93,9 @@
         android:name="com.example.myapplication.CommentFragment"
         android:label="CommentFragment"
         tools:layout="@layout/fragment_comment">
-        <argument
-            android:name="commentData"
-            app:argType="com.example.myapplication.model.Comment" />
+<!--        <argument-->
+<!--            android:name="commentData"-->
+<!--            app:argType="com.example.myapplication.model.PostModel" />-->
     </fragment>
     <fragment
         android:id="@+id/likeFragment"

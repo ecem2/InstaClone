@@ -15,6 +15,11 @@ import com.example.myapplication.databinding.ReceiveMsgBinding
 import com.example.myapplication.databinding.SendMsgBinding
 import com.example.myapplication.model.Message
 import com.google.firebase.auth.FirebaseAuth
+import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 class MessageAdapter(
     private val context: Context,
     private var messages: ArrayList<Message>
@@ -27,13 +32,12 @@ class MessageAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MsgHolder {
-        val view = when(viewType){
+        val view = when (viewType) {
             ITEM_SENT -> LayoutInflater.from(parent.context)
                 .inflate(R.layout.send_msg, parent, false)
             ITEM_RECEIVE -> LayoutInflater.from(parent.context)
                 .inflate(R.layout.receive_msg, parent, false)
             else -> throw IllegalArgumentException("Invalid view type")
-
         }
 
           return MsgHolder(view)
@@ -55,36 +59,9 @@ class MessageAdapter(
             holder.image.visibility = View.GONE // Görüntüyü gizleyin
             // Diğer düzenlemeleri ekleyebilirsiniz.
         }
-        holder.tvMessage.text = message.message
-//        if (holder.itemViewType == ITEM_SENT) {
-//            val viewHolder = holder as MsgHolder
-//            if (message.message == "photo") {
-//                viewHolder.binding.image.visibility = View.VISIBLE
-//                viewHolder.binding.message.visibility = View.VISIBLE
-//                viewHolder.binding.mLinear.visibility = View.VISIBLE
-//
-//                Glide.with(context)
-//                    .load(message.imageUrl)
-//                    .placeholder(R.drawable.ic_fifth)
-//                    .into(viewHolder.binding.image)
-//            } else {
-//                viewHolder.binding.message.text = message.message
-//            }
-//        } else {
-//            val viewHolder = holder as MsgHolder
-//            if (message.message == "photo") {
-//                viewHolder.binding.image.visibility = View.VISIBLE
-//                viewHolder.binding.message.visibility = View.VISIBLE
-//                viewHolder.binding.mLinear.visibility = View.VISIBLE
-//
-//                Glide.with(context)
-//                    .load(message.imageUrl)
-//                    .placeholder(R.drawable.ic_fifth)
-//                    .into(viewHolder.binding.image)
-//            } else {
-//                viewHolder.binding.message.text = message.message
-//            }
-//        }
+
+        // Mesajı bağlama fonksiyonunu çağırın
+        holder.bindMessage(message)
     }
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
@@ -98,7 +75,18 @@ class MessageAdapter(
     inner class MsgHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvMessage: AppCompatTextView = itemView.findViewById(R.id.message)
         val image : AppCompatImageView = itemView.findViewById(R.id.image)
+       // val timestamp : AppCompatTextView = itemView.findViewById(R.id.timestamp)
 
+        val message = Message(
+            senderId = senderUid,
+            message = "Mesaj metni"
+
+        )
+        fun bindMessage(message: Message) {
+            tvMessage.text = message.message
+
+
+        }
     }
 
 }

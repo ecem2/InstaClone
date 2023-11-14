@@ -26,6 +26,7 @@ class SearchAdapter(
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(
             SearchCardViewBinding.inflate(
@@ -53,6 +54,8 @@ class SearchAdapter(
         searchList.addAll(search)
         notifyDataSetChanged()
     }
+
+
 
     inner class SearchViewHolder(private val binding: SearchCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {

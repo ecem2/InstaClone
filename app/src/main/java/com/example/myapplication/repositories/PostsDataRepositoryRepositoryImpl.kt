@@ -2,11 +2,9 @@ package com.example.myapplication.repositories
 
 import android.util.Log
 import com.example.myapplication.extension.Resource
+import com.example.myapplication.model.Comment
 import com.example.myapplication.model.PostModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
@@ -22,7 +20,12 @@ class PostsDataRepositoryRepositoryImpl(
 
     val database: DatabaseReference = Firebase.database.reference
     val postList: ArrayList<PostModel> = ArrayList()
+    var filteredPosts: List<PostModel> = emptyList()
 
+    fun removeRepeats(list: List<Any>): List<Any> {
+        val last = if (list.size > 1) removeRepeats(list.drop(1)) else emptyList()
+        return if (last.isNotEmpty() && last.first() == list.first()) last else listOf(list.first()) + last
+    }
     override suspend fun getAllPost(): Resource<ArrayList<PostModel>> = withContext(Dispatchers.IO) {
         try {
             Resource.loading(null)
@@ -32,9 +35,9 @@ class PostsDataRepositoryRepositoryImpl(
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             for (i in snapshot.children) {
-                                val postHashMap = i.getValue<PostModel>()
-                                if (postHashMap != null) {
-                                    postList.add(postHashMap)
+                                val post = i.getValue<PostModel>()
+                                if (post != null) {
+                                    postList.add(post)
                                 }
                             }
                             postList.reverse()
@@ -61,19 +64,27 @@ class PostsDataRepositoryRepositoryImpl(
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
+                        var filteredPosts = mutableListOf<PostModel>() // Create a list to store valid posts
+
                         for (i in snapshot.children) {
-                            val postHashMap = i.getValue<PostModel>()
-                            if (postHashMap != null) {
-                                postList.add(postHashMap)
+                            try {
+                                val post = i.getValue(PostModel::class.java)
+                                if (post != null) {
+                                    filteredPosts.add(post) // Add valid posts to the list
+                                }
+                            } catch (e: Exception) {
+                                Log.e("ecco", "EORR = ${e.localizedMessage}")
                             }
                         }
-                        postList.reverse()
-                        Log.e("ecco", "POST DATA REPO postList111111 = $postList")
+
+                        filteredPosts = removeRepeats(filteredPosts) as MutableList<PostModel>
+                        filteredPosts.reverse()
+                        Log.e("ecco", "POST DATA REPO postList111111 = $filteredPosts")
+
+                        trySend(Resource.success(filteredPosts) as Resource<ArrayList<PostModel>>).isSuccess
                     } else {
                         Log.e("ecco", "POST DATA REPO postList222 = $postList")
                     }
-
-                    trySend(Resource.success(postList)).isSuccess
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -82,5 +93,4 @@ class PostsDataRepositoryRepositoryImpl(
             })
         awaitClose { database.removeEventListener(listener) }
     }
-
 }

@@ -56,47 +56,7 @@ class HomeViewModel(
     }
 
     suspend fun getPostData() = viewModelScope.launch {
-//         _postsData.postValue(Resource.loading(null))
-//        val postList = repo.getAllPosts()
-//
-//        if (postList.data.isNullOrEmpty()) {
-//            _postsData.postValue(Resource.error(postList.message.toString(), null))
-//        } else {
-//            _postsData.postValue(postList)
-//        }
 
-
-//        val postList: ArrayList<PostModel> = ArrayList()
-//        database.child("Posts")
-//            .orderByChild("timestamp")
-//            .addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    if (snapshot.exists()) {
-//                        for (i in snapshot.children) {
-//                            val postHashMap = i.getValue<HashMap<String, Any>>()
-//                            val postModel = PostModel(
-//                                userId = postHashMap?.get("userId") as? String,
-//                                timestamp = postHashMap?.get("timestamp") as? String,
-//                                isLike = postHashMap?.get("isLike") as? Boolean ?: false,
-//                                postPhoto = postHashMap?.get("postPhoto") as? ArrayList<String>,
-//                                likeArray = postHashMap?.get("likeArray") as? ArrayList<String>,
-//                                postId = postHashMap?.get("postId") as? String,
-//                                //comments = postHashMap?.get("comments") as? ArrayList<Comment>
-//                            )
-//                            postList.add(postModel)
-//                        }
-//                        //_postsData.value?.clear()
-//                        postList.reverse()
-//                        _postsData.postValue(postList)
-//                    } else {
-//                        Log.d("ecco", "aaaa $_postsData")
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    Log.e("ViewModel", "POST ERROR ${error.message}")
-//                }
-//            })
     }
 
 

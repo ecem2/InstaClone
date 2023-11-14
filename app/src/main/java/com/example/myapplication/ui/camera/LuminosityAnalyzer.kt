@@ -2,7 +2,6 @@ package com.example.myapplication.ui.camera
 
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.example.myapplication.LumaListener
 import java.nio.ByteBuffer
 
 class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {

@@ -6,11 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/messageProfilePhoto"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="20dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="15dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,7 +19,7 @@
         android:id="@+id/messageNickName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="9dp"
         android:textColor="@color/black"
         android:text="ecem.cg"
         android:fontFamily="@font/sf_pro_text_regular"
@@ -28,7 +29,7 @@
         android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="9dp"
         android:text="Message"
         android:fontFamily="@font/sf_pro_text_regular"
         app:layout_constraintStart_toEndOf="@id/messageProfilePhoto"
@@ -38,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="  "
-        android:layout_marginRight="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/messageCamera"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toEndOf="@+id/messageText"
         app:layout_constraintTop_toTopOf="@+id/messageText"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/messageCamera"
@@ -48,6 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_message_camera"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintTop_toTopOf="@id/messageProfilePhoto"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

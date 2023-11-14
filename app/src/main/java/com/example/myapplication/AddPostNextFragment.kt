@@ -64,7 +64,6 @@ class AddPostNextFragment : Fragment() {
             binding.llProgress.visibility = View.VISIBLE
             uploadImage()
         }
-
     }
 
     private fun addDataToFirebase(

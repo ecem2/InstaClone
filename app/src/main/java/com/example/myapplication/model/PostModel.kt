@@ -12,6 +12,7 @@ data class PostModel(
     val timestamp: String? = null,
     @SerializedName(value = "photoInfo")
     val photoInfo: String? = null,
+    @SerializedName(value = "isLike")
     var isLike: Boolean = false,
     @SerializedName(value = "postPhoto")
     val postPhoto: ArrayList<String>? = null,
@@ -19,6 +20,6 @@ data class PostModel(
     val likeArray: ArrayList<String>? = null,
     @SerializedName(value = "postId")
     val postId: String? = null,
-  @SerializedName(value = "commentList")
-    val commentList: ArrayList<ArrayList<Comment>> = ArrayList()
-): Parcelable
+    @SerializedName(value = "commentList")
+    var commentList: Comment? = null
+) : Parcelable

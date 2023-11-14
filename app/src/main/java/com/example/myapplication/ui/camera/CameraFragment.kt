@@ -1,58 +1,61 @@
-package com.example.myapplication
+package com.example.myapplication.ui.camera
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.content.Context
+import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.ImageFormat
-import android.graphics.SurfaceTexture
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.hardware.camera2.*
-import android.media.ImageReader
+import android.hardware.display.DisplayManager
 import android.os.*
 import android.provider.MediaStore
+import android.provider.Telephony.Mms.Part.FILENAME
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Surface
-import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import androidx.window.layout.WindowMetricsCalculator
+import androidx.work.await
 import com.bumptech.glide.Glide
 import com.example.myapplication.databinding.FragmentCameraBinding
-import com.example.myapplication.extension.setupActionBar
-import com.example.myapplication.ui.camera.LuminosityAnalyzer
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.myapplication.ui.main.MainActivity.Companion.KEY_EVENT_ACTION
+import com.example.myapplication.ui.main.MainActivity.Companion.KEY_EVENT_EXTRA
 import com.google.android.material.snackbar.Snackbar
-import java.io.File
-import java.io.FileOutputStream
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import android.provider.Telephony.Mms.Part.FILENAME
+import com.example.myapplication.AddPostNextFragmentDirections
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+
 typealias LumaListener = (luma: Double) -> Unit
 
 class CameraFragment : Fragment() {
-
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
-    private var imageCapture: ImageCapture? = null
+    private lateinit var cameraProvider: ProcessCameraProvider
+    private lateinit var imageCapture: ImageCapture
     private lateinit var cameraExecutor: ExecutorService
+    private lateinit var mediaStoreUtils: MediaStoreUtils
+
     var isReadGranted = false
     var isWriteGranted = false
     var isMediaGranted = false
+
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions: Map<String, Boolean> ->
@@ -87,10 +90,16 @@ class CameraFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         checkAndRequestCameraPermissions()
 
-
-        binding.cameraButton.setOnClickListener {
-            takePhoto()
+        if(hasCameraFeature()){
+            binding.cameraButton.setOnClickListener {
+                takePhoto()
+            }
         }
+        binding.cameraExit.setOnClickListener {
+            val viewPager = requireActivity().findViewById<ViewPager2>(com.example.myapplication.R.id.homeViewPager)
+            viewPager.currentItem = 1
+        }
+
         if (isCameraPermissionGranted() && isReadStoragePermissionGranted() ) {
             Handler(Looper.getMainLooper()).postDelayed({
                 openCamera()
@@ -106,10 +115,12 @@ class CameraFragment : Fragment() {
             askPermissionForBelow11()
         }
     }
+
     private fun askPermissionForApi33() {
         val cameraPermission = Manifest.permission.CAMERA
         val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
         val writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+
         val permissionsToRequest = mutableListOf<String>()
 
         if (ContextCompat.checkSelfPermission(requireContext(), cameraPermission) != PackageManager.PERMISSION_GRANTED) {
@@ -120,7 +131,8 @@ class CameraFragment : Fragment() {
             permissionsToRequest.add(readPermission)
         }
 
-        if (ContextCompat.checkSelfPermission(requireContext(), writePermission) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(requireContext(), writePermission) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(writePermission)
         }
 
@@ -146,8 +158,7 @@ class CameraFragment : Fragment() {
         if (!isReadGranted) {
             permissionRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         } else {
-//            viewModel.loadAllImages()
-//            setupCollecting()
+
         }
         if (!isWriteGranted) {
             permissionRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -204,23 +215,37 @@ class CameraFragment : Fragment() {
     }
 
     private fun openCamera() {
-
         val preview = Preview.Builder().build()
         val cameraSelector = CameraSelector.Builder()
             .requireLensFacing(CameraSelector.LENS_FACING_BACK)
             .build()
 
+        imageCapture = ImageCapture.Builder()
+            .setTargetRotation(Surface.ROTATION_0)
+            .build()
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
-            preview.setSurfaceProvider(binding.pvCamera.surfaceProvider)
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            cameraProvider.bindToLifecycle(
-                this,
-                cameraSelector,
-                preview,
-            )
+            try {
+                cameraProvider = cameraProviderFuture.get() ?: return@addListener
 
+                // Unbind any existing use cases before rebinding
+                cameraProvider.unbindAll()
+
+                // Bind the camera use cases
+                cameraProvider.bindToLifecycle(
+                    this,
+                    cameraSelector,
+                    preview,
+                    imageCapture
+                )
+
+                // Set the surface provider for the preview
+                preview.setSurfaceProvider(binding.pvCamera.surfaceProvider)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error initializing camera: ${e.message}", e)
+            }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
     private fun showSnackbar(
@@ -243,18 +268,17 @@ class CameraFragment : Fragment() {
         return requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
     }
     private fun takePhoto() {
-        val imageCapture = imageCapture ?: return
+        Log.d(TAG, "takePhoto called")
+
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
-
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/MyApplication")
             }
         }
-
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(
                 requireContext().contentResolver,
@@ -268,11 +292,13 @@ class CameraFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Fotoğraf çekme hatası: ${exc.message}", exc)
+                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Fotoğraf çekme başarılı: ${output.savedUri}"
+                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    Log.d(TAG, msg)
+
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 
                     binding.apply {
@@ -281,6 +307,9 @@ class CameraFragment : Fragment() {
 
                         Glide.with(requireContext()).load(output.savedUri).into(imagePreview)
                     }
+
+                    // Stop the camera after taking a photo
+                    cameraProvider.unbindAll()
                 }
             }
         )
@@ -292,6 +321,7 @@ class CameraFragment : Fragment() {
 
     companion object {
         private const val TAG = "CameraFragment"
+        private const val PHOTO_TYPE = "image/jpeg"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     }
 }

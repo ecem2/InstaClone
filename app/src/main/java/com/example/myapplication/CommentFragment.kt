@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,6 +19,7 @@ import com.example.myapplication.databinding.FragmentCommentBinding
 import com.example.myapplication.extension.parcelable
 import com.example.myapplication.model.Comment
 import com.example.myapplication.model.PostModel
+import com.example.myapplication.model.UserModel
 import com.example.myapplication.ui.adapter.CommentAdapter
 
 import com.google.firebase.auth.FirebaseAuth
@@ -34,50 +36,46 @@ class CommentFragment : Fragment() {
     private val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
     private var postId: String? = null
     private var recyclerView: RecyclerView? = null
-
-    private lateinit var currentUserUid: String
-    private val commentLikeArray : ArrayList<String> = ArrayList()
-    private  var commentId: String?= null
-    private lateinit var userId: String
-    private lateinit var commentTime: String
-    private lateinit var commentText: String
-    private lateinit var mRef: DatabaseReference
-
-
-    private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseAuth: FirebaseAuth
+    private  var commentId: String?= null
+    private  var commentTime: String?= null
+    private  var commentText: String?= null
+
+    private lateinit var mRef: DatabaseReference
     private var _binding: FragmentCommentBinding? = null
     private val binding get() = _binding!!
-    val user = Firebase.auth.currentUser!!.uid
+    private var userList: ArrayList<UserModel>? = ArrayList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         val view = binding.root
-
+       // commentId = firebaseUser.uid
         mRef = FirebaseDatabase.getInstance().reference
-        firebaseAuth = FirebaseAuth.getInstance()
-        getSelectedUserData()
+        //firebaseAuth = FirebaseAuth.getInstance()
+       // getSelectedUserData()
         setupRecyclerCommentView()
         setUpCommentWritingSection()
-        postId?.let { getComments(it) }
-        val prefEditor = activity?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)?.edit()
-        prefEditor?.putString("postId", postId) // postId değişkeni, kaydedilecek olan değer
-        prefEditor?.apply()
 
-        // SharedPreferences'tan "postId" değerini alma ve kullanma işlemi
-        val pref = activity?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
-        this.postId = pref?.getString("postId", null).toString()
-        Log.d("AAAAA", "postId from SharedPreferences: $postId")
-        commentList = ArrayList()
-        commentAdapter = context?.let { CommentAdapter(it, commentList as ArrayList<Comment>) }
-        recyclerView?.adapter = commentAdapter
+        val translation = arguments?.parcelable<PostModel>("clickedComment")
+        if (translation != null) {
+            postId = translation.postId.toString()
+            Log.d("SALIMM", "postId from arguments: $postId")
+        }
+
+
+//        userList = ArrayList()
+//        commentAdapter = commentList?.let { CommentAdapter(requireContext(), it, userList!!) }
+//        binding.commentsRecyclerView.adapter = commentAdapter
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getComments()
+
         binding.commentBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -86,7 +84,6 @@ class CommentFragment : Fragment() {
             commentText = binding.commentEditText.text.toString().trim()
             commentTime = System.currentTimeMillis().toString()
 
-            // Eğer yorum göndermeden önce postId değeri null ise, kullanıcıya bir uyarı verin.
             if (postId == null) {
                 Toast.makeText(
                     requireContext(),
@@ -98,13 +95,8 @@ class CommentFragment : Fragment() {
                 Log.d("AAAAA", "$postId")
             }
         }
-        arguments?.let {
-            val translation = it.getParcelable<PostModel>("clickedComment")
-            if (translation != null) {
-                postId = translation.postId.toString()
-                Log.d("SALIMM", "postId from arguments: $postId")
-            }
-        }
+
+
 
         binding.commentEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -112,7 +104,9 @@ class CommentFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.commentEditText.text.toString() == ""
+                if (binding.commentEditText.text.toString() != s.toString()) {
+                    binding.commentEditText.setText(s)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -126,118 +120,107 @@ class CommentFragment : Fragment() {
         mRef.child("Users").child(firebaseUser.uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val currentUserProfPic = snapshot.child("profilePhoto").value.toString()
-                    arguments?.let {
-                        if (currentUserProfPic != null) {
+                    if (snapshot.exists()) {
+                        val currentUserProfPic = snapshot.child("profilePhoto").value.toString()
+                        val commentProfilePhoto = binding.commentProfilePhoto
+
+                        if (!currentUserProfPic.isNullOrEmpty()) {
                             Glide.with(requireContext())
                                 .load(currentUserProfPic)
-                                .into(binding.commentProfilePhoto)
+                                .into(commentProfilePhoto)
+                        } else {
+                            Glide.with(requireContext())
+                                .load(R.drawable.ic_fifth)
+                                .into(commentProfilePhoto)
                         }
-
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
                 }
             })
     }
-    private fun getComments(postId: String) {
-        val userIdList: ArrayList<String> = ArrayList()
-        mRef.child("Posts").child(postId).child("comments")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    commentList?.clear()
-                    for (dataSnapshot in snapshot.children) {
-                        val comment = dataSnapshot.getValue(Comment::class.java)
-                        comment?.let {
-                            commentList?.add(it)
-                            it.userId?.let { userId -> userIdList.add(userId) }
+    private fun getComments() {
+        val commentRef = mRef.child("Posts").child(postId!!).child("commentList")
+
+        commentRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (snap in snapshot.children) {
+                        val comment = snap.getValue(Comment::class.java)
+                        if (comment != null) {
+                            commentList?.add(comment)
+                            comment.userId?.let { getUsers(it) }
                         }
                     }
-                    getUsers(userIdList)
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Hata durumu
-                }
-            })
+                Log.i("COMMENT FRAGMENT", "COMMENT LIST: $commentList")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "Failed to read value GET COMMENTS.", error.toException())
+            }
+        })
     }
 
+    private fun getUsers(userId: String) {
+        mRef.child("Users").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val profilePhoto = snapshot.child("profilePhoto").getValue(String::class.java)
+                    val userNickName = snapshot.child("userNickName").getValue(String::class.java)
 
-    private fun getUsers(userList: ArrayList<String>) {
-        mRef.child("Users")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        for (snap in snapshot.children) {
-                            val userId = snap.child("userId").getValue(String::class.java)
-                            val profilePhoto =
-                                snap.child("profilePhoto").getValue(String::class.java)
-                            val userNickName =
-                                snap.child("userNickName").getValue(String::class.java)
+                    val user = UserModel()
+                    user.userId = userId
+                    user.profilePhoto = profilePhoto
+                    user.userNickName = userNickName
 
-//                        if (userId != null && userList.contains(userId)) {
-//                            val comment = commentList.find { it.userId == userId }
-//                            comment?.profilePhoto = profilePhoto
-//                            comment?.userNickName = userNickName
-//                        }
-                        }
+                    userList?.add(user)
+
+                    // Check if all users are retrieved before submitting to the adapter
+                    if (userList?.size == commentList?.size) {
+                        commentAdapter?.submitCommentList(userList!!)
                     }
-                    commentList?.let { commentAdapter?.submitCommentList(it) }
                 }
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("salimmm", "getUsers ${error.message}")
-                }
-            })
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("salimmm", "getUsers ${error.message}")
+            }
+        })
     }
-    private fun publishComment(postId: String) {
-
+    private fun publishComment(postId:String) {
         val commentId = mRef.child("Posts").child(postId).child("commentList").push().key.toString()
-        val commentRef = mRef.child("Posts").child(postId).child("commentList")
+
+        val commentRef = mRef.child("Posts").child(postId).child("commentList").child(commentId)
 
         val commentMap = HashMap<String, Any>()
-        commentMap["commentId"] = commentId // Include the commentId in the commentMap
-        commentMap["commentText"] = commentText // Make sure commentText is properly assigned
-        commentMap["commentTime"] = commentTime // Make sure commentTime is properly assigned
+
         commentMap["userId"] = FirebaseAuth.getInstance().currentUser!!.uid
+        commentMap["commentId"] = commentId
+        commentMap["commentText"] = binding.commentEditText.text.toString()
+        commentMap["commentTime"] = System.currentTimeMillis().toString()
 
-        commentRef.updateChildren(commentMap)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Ecccoo", "SUCCESSFUL === ${task.isSuccessful}")
-                } else {
-                    Log.d("Ecccoo", "ERROR")
-                    Toast.makeText(requireContext(), "Post could not load", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), exception.localizedMessage, Toast.LENGTH_SHORT).show()
-                Log.d("Ecccoo", "FAILURE === ${exception.message}")
-            }
+        commentRef.setValue(commentMap)
+
         binding.commentEditText.setText("")
+
+        Toast.makeText(context, "Comment Uploaded Successfully", Toast.LENGTH_SHORT).show()
         Log.i("COMMENT UPLOADED NOW", "COMMENT UPLOADED")
-
     }
-
     private fun setupRecyclerCommentView() {
-        commentAdapter = commentList?.let {
-            CommentAdapter(
-                requireContext(),
-                it
-            )
-        }
+        commentAdapter = CommentAdapter(
+            requireContext(),
+            commentList ?: ArrayList(),
+            userList ?: ArrayList()
+        )
 
         binding.commentsRecyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = commentAdapter
             setHasFixedSize(true)
         }
+    }
 
-    }
-    private fun getSelectedUserData() {
-        commentId = firebaseAuth.currentUser!!.uid
-    }
 }

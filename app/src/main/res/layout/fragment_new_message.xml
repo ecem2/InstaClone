@@ -23,32 +23,30 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/newMessageLL"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_margin="16dp"
-        android:padding="6dp"
+        android:padding="8dp"
+        android:gravity="center"
         android:background="@drawable/ic_edit_text_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backButton"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_fragment_search" />
+            android:src="@drawable/ic_insta_search" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/messageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="7dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="35dp"
             android:background="@null"
             android:hint="Search"
             android:textAllCaps="false"
             android:padding="6dp"
             android:fontFamily="@font/sf_pro_text_regular"
-            app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -93,11 +94,12 @@ class StoryAdapter(
                 .into(binding.storyView)
 
 
-            binding.storyNickname.text = userModel?.userNickName
             if (userModel?.userStory?.isNotEmpty() == true) {
                 binding.storyColor.visibility = View.VISIBLE
+                binding.storyNickname.text = userModel?.userNickName
             } else {
-                binding.storyColor.visibility = View.GONE
+                binding.storyColor.visibility = View.INVISIBLE // Görünmez, ancak yer kaplar
+                binding.storyNickname.text = userModel?.userNickName
             }
         }
     }

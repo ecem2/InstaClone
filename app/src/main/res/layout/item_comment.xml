@@ -42,8 +42,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="  "
-        app:layout_constraintBottom_toBottomOf="@id/commentNickname"
+        android:text=""
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textSize="12sp"
+        android:gravity="start|center"
         app:layout_constraintStart_toEndOf="@id/commentNickname"
         app:layout_constraintTop_toTopOf="@id/commentNickname" />
 
@@ -53,8 +56,9 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text=" "
-        android:textSize="14sp"
-        android:fontFamily="@font/sf_pro_text_bold"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/sf_pro_text_regular"
         app:layout_constraintBottom_toTopOf="@+id/commentAnswer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/commentHomeProfilePhoto"
@@ -69,18 +73,10 @@
         android:text="Reply"
         android:textSize="12sp"
         android:textAllCaps="false"
+        app:layout_constraintStart_toEndOf="@+id/commentHomeProfilePhoto"
         android:fontFamily="@font/sf_pro_text_regular"
-        app:layout_constraintStart_toEndOf="@+id/commentLikeCount"
         app:layout_constraintTop_toBottomOf="@+id/comment" />
 
-    <TextView
-        android:id="@+id/commentLikeCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:text="  "
-        app:layout_constraintStart_toEndOf="@id/commentHomeProfilePhoto"
-        app:layout_constraintTop_toBottomOf="@id/comment" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
